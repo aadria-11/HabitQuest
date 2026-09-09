@@ -1,5 +1,6 @@
 import { SessionProvider } from 'next-auth/react';
 import { Navbar } from '@/components/layout/Navbar';
+import { SocketProvider } from '@/components/providers/SocketProvider';
 import { auth } from '@/lib/auth';
 
 export default async function DashboardLayout({
@@ -11,10 +12,12 @@ export default async function DashboardLayout({
 
   return (
     <SessionProvider session={session}>
-      <div className="flex min-h-screen flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-      </div>
+      <SocketProvider>
+        <div className="flex min-h-screen flex-col">
+          <Navbar />
+          <main className="flex-1">{children}</main>
+        </div>
+      </SocketProvider>
     </SessionProvider>
   );
 }
