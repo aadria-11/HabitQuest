@@ -19,6 +19,7 @@ export function createApp() {
 
   // Routes
   app.use('/internal', internalRoutes);
+  app.use('/api/habits', (await import('./routes/habit.routes.js')).default);
 
   // Health check
   app.get('/health', (_req, res) => {
