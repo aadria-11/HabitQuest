@@ -1,5 +1,7 @@
 import { prisma } from '../lib/prisma.js';
 import { calculateStreaks, getHabitCheckIns } from './streak.service.js';
+import { StreakUpdatedEvent, HabitCheckedInEvent } from '@shared/types';
+import { getSocketIO } from '../sockets/index.js';
 
 export async function createCheckIn(habitId: string, userId: string, checkInDate: string) {
   // Verify habit belongs to user
@@ -32,7 +34,7 @@ export async function createCheckIn(habitId: string, userId: string, checkInDate
   }
 
   // Create check-in and recalculate streaks in a transaction
-  return await prisma.$transaction(async (tx) => {
+  const checkIn = await prisma.$transaction(async (tx) => {
     const checkIn = await tx.habitCheckIn.create({
       data: {
         habitId,
@@ -55,8 +57,21 @@ export async function createCheckIn(habitId: string, userId: string, checkInDate
       data: { currentStreak, bestStreak },
     });
 
-    return checkIn;
+    return { checkIn, currentStreak, bestStreak };
   });
+
+  // Emit WebSocket events
+  const io = getSocketIO();
+  if (io) {
+    io.to(`user:${userId}`).emit('habit:checkedin', { habitId, checkInDate: date });
+    io.to(`user:${userId}`).emit('streak:updated', {
+      habitId,
+      currentStreak: checkIn.currentStreak,
+      bestStreak: checkIn.bestStreak,
+    });
+  }
+
+  return checkIn.checkIn;
 }
 
 export async function getCheckIns(habitId: string, userId: string) {

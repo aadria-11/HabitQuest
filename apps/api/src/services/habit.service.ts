@@ -1,12 +1,13 @@
 import { prisma } from '../lib/prisma.js';
-import { Habit, HabitStatus } from '@shared/types';
+import { Habit, HabitStatus, HabitUpdatedEvent, HabitDeletedEvent, HabitCreatedEvent } from '@shared/types';
 import { CreateHabit, UpdateHabit } from '@shared/schemas';
+import { getSocketIO } from '../sockets/index.js';
 
 export async function createHabit(
   userId: string,
   data: CreateHabit,
 ): Promise<Habit> {
-  return prisma.habit.create({
+  const habit = await prisma.habit.create({
     data: {
       userId,
       name: data.name,
@@ -15,6 +16,14 @@ export async function createHabit(
       status: (data.status as any) || 'ACTIVE',
     },
   });
+
+  const io = getSocketIO();
+  if (io) {
+    const event: HabitCreatedEvent = { type: 'habit:created', data: habit };
+    io.to(`user:${userId}`).emit('habit:created', event.data);
+  }
+
+  return habit;
 }
 
 export async function getHabits(
@@ -79,10 +88,18 @@ export async function updateHabit(
   if (data.startDate) updateData.startDate = new Date(data.startDate);
   if (data.status) updateData.status = data.status;
 
-  return prisma.habit.update({
+  const updated = await prisma.habit.update({
     where: { id: habitId },
     data: updateData,
   });
+
+  const io = getSocketIO();
+  if (io) {
+    const event: HabitUpdatedEvent = { type: 'habit:updated', data: updated };
+    io.to(`user:${userId}`).emit('habit:updated', event.data);
+  }
+
+  return updated;
 }
 
 export async function deleteHabit(userId: string, habitId: string): Promise<boolean> {
@@ -92,6 +109,12 @@ export async function deleteHabit(userId: string, habitId: string): Promise<bool
   await prisma.habit.delete({
     where: { id: habitId },
   });
+
+  const io = getSocketIO();
+  if (io) {
+    const event: HabitDeletedEvent = { type: 'habit:deleted', habitId };
+    io.to(`user:${userId}`).emit('habit:deleted', habitId);
+  }
 
   return true;
 }
