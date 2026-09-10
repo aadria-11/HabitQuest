@@ -1,7 +1,8 @@
 import NextAuth from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import { Session } from 'next-auth';
-import EntraProvider from 'next-auth/providers/azure-ad';
+import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
 import { JWTPayload } from '@shared/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -10,13 +11,15 @@ const AUTH_SECRET = process.env.AUTH_SECRET || '';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
-    EntraProvider({
-      clientId: process.env.ENTRA_ID_CLIENT_ID || '',
-      clientSecret: process.env.ENTRA_ID_CLIENT_SECRET || '',
-      tenantId: process.env.ENTRA_ID_TENANT || 'common',
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    GitHub({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
   ],
-  basePath: '/auth',
   secret: AUTH_SECRET,
   pages: {
     signIn: '/login',

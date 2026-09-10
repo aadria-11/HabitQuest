@@ -4,12 +4,23 @@ import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { initSocket } from '@/lib/socket';
 import { Habit } from '@shared/types';
+import { useSession } from 'next-auth/react';
 
 export function useHabitSocket() {
   const queryClient = useQueryClient();
   const socket = initSocket();
+  const { data: session } = useSession();
 
   useEffect(() => {
+    
+    if (!session?.user?.id) return;
+
+    if (session?.user?.id) {  
+      socket.emit('subscribe', {
+        userId: session.user.id,
+      });
+    }
+
     socket.on('habit:created', (habit: Habit) => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
     });
@@ -39,12 +50,24 @@ export function useHabitSocket() {
       },
     );
 
+    socket.on('milestone', (data) => {
+      alert(
+        `${data.habitName} reached a ${data.milestone}-day streak!`
+      );
+
+      socket.emit('milestone:ack', {
+        notificationId: data.notificationId,
+      });
+    });
+``
+
     return () => {
       socket.off('habit:created');
       socket.off('habit:updated');
       socket.off('habit:deleted');
       socket.off('habit:checkedin');
       socket.off('streak:updated');
+      socket.off('milestone');
     };
-  }, [socket, queryClient]);
+  }, [socket, queryClient, session]);
 }

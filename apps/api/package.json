@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --watch src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint src",
@@ -12,28 +12,29 @@
     "test": "vitest",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "node --loader ts-node/esm prisma/seed.ts"
+    "db:seed": "node --loader ts-node/esm prisma/seed.ts",
+    "postinstall": "prisma generate --schema=apps/api/prisma/schema.prisma"
   },
   "dependencies": {
-    "express": "^4.18.0",
-    "socket.io": "^4.7.0",
-    "prisma": "^5.0.0",
     "@prisma/client": "^5.0.0",
-    "zod": "^3.22.0",
-    "jsonwebtoken": "^9.1.0",
-    "cookie": "^0.5.0",
-    "cors": "^2.8.0"
+    "cookie": "^2.0.1",
+    "cors": "^2.8.0",
+    "express": "^4.18.0",
+    "jsonwebtoken": "^9.0.0",
+    "prisma": "^5.0.0",
+    "socket.io": "^4.7.0",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
-    "@types/express": "^4.17.0",
-    "@types/node": "^20.0.0",
-    "@types/jsonwebtoken": "^9.0.0",
     "@types/cookie": "^0.5.0",
     "@types/cors": "^2.8.0",
-    "typescript": "^5.0.0",
-    "vitest": "^1.0.0",
-    "supertest": "^6.3.0",
+    "@types/express": "^4.17.0",
+    "@types/jsonwebtoken": "^9.0.0",
+    "@types/node": "^20.0.0",
     "@types/supertest": "^2.0.0",
-    "ts-node": "^10.9.0"
+    "supertest": "^6.3.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0",
+    "vitest": "^5.0.0"
   }
 }

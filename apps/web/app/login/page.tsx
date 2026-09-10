@@ -11,11 +11,11 @@ export default function LoginPage() {
         <form
           action={async () => {
             'use server';
-            await signIn('azure-ad', { redirectTo: '/dashboard' });
+            await signIn('github', { redirectTo: '/dashboard' });
           }}
         >
           <Button type="submit" className="w-full" size="lg">
-            Sign in with Microsoft
+            Sign in with GitHub
           </Button>
         </form>
       </div>

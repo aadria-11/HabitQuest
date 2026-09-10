@@ -1,10 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-* {
-  @apply m-0 p-0 box-border;
-}
+@import "tailwindcss";
 
 html {
   @apply scroll-smooth;

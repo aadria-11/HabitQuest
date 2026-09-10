@@ -3,6 +3,8 @@ import cors from 'cors';
 import { getEnv } from './config/env.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import internalRoutes from './routes/internal.routes.js';
+import habitRoutes from './routes/habit.routes.js';
+import checkinRoutes from './routes/checkin.routes.js';
 
 export function createApp() {
   const app = express();
@@ -18,9 +20,13 @@ export function createApp() {
   app.use(express.json());
 
   // Routes
-  app.use('/internal', internalRoutes);
+  /*app.use('/internal', internalRoutes);
   const habitRoutes = (await import('./routes/habit.routes.js')).default;
   const checkinRoutes = (await import('./routes/checkin.routes.js')).default;
+  app.use('/api/habits', habitRoutes);
+  app.use('/api/habits/:id/checkin', checkinRoutes);
+  */
+  app.use('/internal', internalRoutes);
   app.use('/api/habits', habitRoutes);
   app.use('/api/habits/:id/checkin', checkinRoutes);
 
