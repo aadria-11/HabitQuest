@@ -54,3 +54,26 @@ export async function listCheckIns(
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function cancelCheckIn(
+  req: Request & AuthenticatedRequest,
+  res: Response,
+) {
+  try {
+    const { id, checkInId } = req.params;
+
+    await checkinService.cancelCheckIn(id, req.user.userId, checkInId);
+
+    res.status(204).send();
+  } catch (error: any) {
+    if (error.message === 'Habit not found') {
+      return res.status(404).json({ error: 'Habit not found' });
+    }
+    if (error.message === 'Check-in not found') {
+      return res.status(404).json({ error: 'Check-in not found' });
+    }
+
+    console.error('Error cancelling check-in:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

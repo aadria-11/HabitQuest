@@ -68,9 +68,16 @@ export interface StreakUpdatedEvent {
   bestStreak: number;
 }
 
+export interface CheckInCancelledEvent {
+  type: 'checkin:cancelled';
+  habitId: string;
+  checkInId: string;
+}
+
 export type WSEvent =
   | HabitCreatedEvent
   | HabitUpdatedEvent
   | HabitDeletedEvent
   | HabitCheckedInEvent
-  | StreakUpdatedEvent;
+  | StreakUpdatedEvent
+  | CheckInCancelledEvent;

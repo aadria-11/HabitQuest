@@ -88,3 +88,49 @@ export async function getCheckIns(habitId: string, userId: string) {
     orderBy: { checkInDate: 'desc' },
   });
 }
+
+export async function cancelCheckIn(habitId: string, userId: string, checkInId: string) {
+  const habit = await prisma.habit.findFirst({
+    where: { id: habitId, userId },
+  });
+
+  if (!habit) {
+    throw new Error('Habit not found');
+  }
+
+  const existing = await prisma.habitCheckIn.findFirst({
+    where: { id: checkInId, habitId },
+  });
+
+  if (!existing) {
+    throw new Error('Check-in not found');
+  }
+
+  const { currentStreak, bestStreak } = await prisma.$transaction(async (tx) => {
+    await tx.habitCheckIn.delete({ where: { id: checkInId } });
+
+    const remaining = await tx.habitCheckIn.findMany({
+      where: { habitId },
+      select: { checkInDate: true },
+    });
+
+    const streaks = calculateStreaks(remaining.map((ci) => new Date(ci.checkInDate)));
+
+    await tx.habit.update({
+      where: { id: habitId },
+      data: { currentStreak: streaks.currentStreak, bestStreak: streaks.bestStreak },
+    });
+
+    return streaks;
+  });
+
+  const io = getSocketIO();
+  if (io) {
+    io.to(`user:${userId}`).emit('checkin:cancelled', { habitId, checkInId });
+    io.to(`user:${userId}`).emit('streak:updated', {
+      habitId,
+      currentStreak,
+      bestStreak,
+    });
+  }
+}
