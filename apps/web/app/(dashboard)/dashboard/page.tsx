@@ -192,23 +192,23 @@ export default function DashboardPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => setCompletionFilter(completionFilter === 'COMPLETED_TODAY' ? null : 'COMPLETED_TODAY')}
-                className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all border-2 ${
                   completionFilter === 'COMPLETED_TODAY'
-                    ? 'bg-green-500 text-white'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    ? 'bg-green-700 text-amber-100 border-green-600'
+                    : 'bg-amber-900 text-amber-200 border-amber-700 hover:bg-amber-800'
                 }`}
               >
-                ✓ Completed Today
+                ✓ Completed Quest
               </button>
               <button
                 onClick={() => setCompletionFilter(completionFilter === 'NOT_COMPLETED_TODAY' ? null : 'NOT_COMPLETED_TODAY')}
-                className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all border-2 ${
                   completionFilter === 'NOT_COMPLETED_TODAY'
-                    ? 'bg-orange-500 text-white'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    ? 'bg-amber-700 text-amber-50 border-amber-600'
+                    : 'bg-amber-900 text-amber-200 border-amber-700 hover:bg-amber-800'
                 }`}
               >
-                ○ Not Completed Today
+                ○ Unfinished Quest
               </button>
             </div>
           )}
@@ -249,22 +249,22 @@ function StatTile({
   color = 'slate',
 }: StatTileProps) {
   const colorClass = {
-    green: 'bg-green-50 border-green-200',
-    amber: 'bg-amber-50 border-amber-200',
-    slate: 'bg-slate-50 border-slate-200',
-    purple: 'bg-purple-50 border-purple-200',
-    yellow: 'bg-yellow-50 border-yellow-200',
+    green: 'bg-gradient-to-br from-green-900 to-green-950 border-green-700',
+    amber: 'bg-gradient-to-br from-amber-800 to-amber-900 border-amber-600',
+    slate: 'bg-gradient-to-br from-amber-900 to-amber-950 border-amber-700',
+    purple: 'bg-gradient-to-br from-purple-900 to-purple-950 border-purple-700',
+    yellow: 'bg-gradient-to-br from-yellow-900 to-yellow-950 border-yellow-700',
   }[color];
 
   return (
     <button
       onClick={onClick}
-      className={`rounded-lg border p-4 text-left transition-all ${colorClass} ${
-        isActive ? 'ring-2 ring-slate-900 ring-offset-1' : ''
+      className={`rounded-xl border-2 p-5 text-left transition-all hover:shadow-lg ${colorClass} ${
+        isActive ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-amber-950 shadow-xl' : 'shadow-md'
       }`}
     >
-      <p className="text-xs font-medium text-slate-600">{label}</p>
-      <p className="mt-2 text-2xl font-bold text-slate-900">{value}</p>
+      <p className="text-xs font-bold text-amber-300 uppercase tracking-widest">{label}</p>
+      <p className="mt-3 text-3xl font-bold text-amber-400">{value}</p>
     </button>
   );
 }

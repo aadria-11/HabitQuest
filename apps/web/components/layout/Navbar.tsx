@@ -25,13 +25,13 @@ export function Navbar() {
           </Link>
 
           <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-600">{session?.user?.email}</span>
+            <span className="text-sm font-medium text-amber-200">{session?.user?.email}</span>
             <Button
-              variant="outline"
               size="sm"
               onClick={() => signOut({ redirectTo: '/login' })}
+              className="bg-amber-600 hover:bg-amber-700 text-amber-50 font-bold border-2 border-amber-500"
             >
-              Sign out
+              ⚔️ Leave Quest
             </Button>
           </div>
         </div>

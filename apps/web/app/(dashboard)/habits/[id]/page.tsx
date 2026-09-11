@@ -82,28 +82,32 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
     <div className="mx-auto max-w-4xl space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-3xl font-bold text-slate-900">{habit.name}</h1>
+          <h1 className="text-3xl font-bold text-amber-400" style={{fontFamily: 'Georgia, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.5)'}}>{habit.name}</h1>
           {isArchived && (
-            <span className="rounded bg-slate-100 px-2 py-1 text-xs font-medium text-slate-800">
-              Read-only
+            <span className="rounded-lg bg-gradient-to-r from-gray-700 to-gray-800 px-3 py-1 text-xs font-bold text-gray-200 border border-gray-600 uppercase tracking-wider">
+              Quest Sealed
             </span>
           )}
         </div>
         <div className="flex gap-2">
           {!isArchived && (
             <Link href={`/habits/${id}/edit`}>
-              <Button variant="outline">Edit</Button>
+              <Button className="bg-amber-700 hover:bg-amber-600 text-amber-50 font-bold border-2 border-amber-600">
+                📜 Edit Quest
+              </Button>
             </Link>
           )}
           <Link href="/dashboard">
-            <Button variant="secondary">Back</Button>
+            <Button className="bg-amber-900 hover:bg-amber-800 text-amber-200 font-bold border-2 border-amber-700">
+              🏰 Return Home
+            </Button>
           </Link>
           <Button
-            variant="destructive"
             onClick={handleDelete}
             disabled={deleteHabit.isPending}
+            className="bg-red-900 hover:bg-red-800 text-red-100 font-bold border-2 border-red-700"
           >
-            {deleteHabit.isPending ? 'Deleting...' : 'Delete'}
+            {deleteHabit.isPending ? '⏳ Destroying...' : '🔥 Destroy Quest'}
           </Button>
         </div>
       </div>
@@ -111,49 +115,53 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
       {/* Info Cards Grid */}
       <div className="grid gap-4 md:grid-cols-3">
         {/* Details Card */}
-        <div className="rounded-xl border border-slate-200 bg-white p-6">
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">
-            About
+        <div className="rounded-xl border-2 border-amber-700 bg-gradient-to-br from-amber-900 to-amber-950 p-6 shadow-lg">
+          <h3 className="mb-3 text-sm font-bold uppercase tracking-widest text-amber-400">
+            📖 Quest Details
           </h3>
-          <p className="text-slate-700">{habit.description}</p>
+          <p className="text-amber-100">{habit.description}</p>
         </div>
 
         {/* Start Date Card */}
-        <div className="rounded-xl border border-slate-200 bg-white p-6">
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">
-            Started
+        <div className="rounded-xl border-2 border-amber-700 bg-gradient-to-br from-amber-900 to-amber-950 p-6 shadow-lg">
+          <h3 className="mb-3 text-sm font-bold uppercase tracking-widest text-amber-400">
+            ⏰ Quest Began
           </h3>
-          <p className="text-2xl font-bold text-slate-900">
+          <p className="text-2xl font-bold text-amber-300" style={{fontFamily: 'Georgia, serif'}}>
             {new Date(habit.startDate).toLocaleDateString('en-US', {
               month: 'short',
               day: 'numeric',
               year: 'numeric',
             })}
           </p>
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-amber-300">
             {Math.floor(
               (new Date().getTime() - new Date(habit.startDate).getTime()) / (1000 * 60 * 60 * 24)
             )}{' '}
-            days ago
+            days of service
           </p>
         </div>
 
         {/* Status Card */}
-        <div className="rounded-xl border border-slate-200 bg-white p-6">
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">
-            Status
+        <div className="rounded-xl border-2 border-amber-700 bg-gradient-to-br from-amber-900 to-amber-950 p-6 shadow-lg">
+          <h3 className="mb-3 text-sm font-bold uppercase tracking-widest text-amber-400">
+            ⚔️ Quest Status
           </h3>
           <div className="flex items-center justify-center">
             <span
-              className={`rounded-full px-4 py-2 text-sm font-semibold uppercase tracking-wider ${
+              className={`rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wider border-2 ${
                 habit.status === 'ACTIVE'
-                  ? 'bg-green-100 text-green-700'
+                  ? 'bg-green-900 text-green-200 border-green-700'
                   : habit.status === 'PAUSED'
-                    ? 'bg-yellow-100 text-yellow-700'
-                    : 'bg-slate-100 text-slate-700'
+                    ? 'bg-yellow-900 text-yellow-200 border-yellow-700'
+                    : 'bg-gray-800 text-gray-300 border-gray-700'
               }`}
             >
-              {habit.status}
+              {habit.status === 'ACTIVE'
+                ? '🟢 Active'
+                : habit.status === 'PAUSED'
+                  ? '⏸️ Paused'
+                  : '🔒 Sealed'}
             </span>
           </div>
         </div>
@@ -161,20 +169,20 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
 
       {/* Streaks Stats */}
       <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-6 text-center">
-          <p className="text-4xl font-bold text-yellow-900">{habit.currentStreak}</p>
-          <p className="mt-2 text-sm font-medium text-yellow-700">🔥 Current Streak</p>
-          <p className="mt-1 text-xs text-yellow-600">consecutive days</p>
+        <div className="rounded-xl border-2 border-yellow-700 bg-gradient-to-br from-yellow-900 to-yellow-950 p-6 text-center shadow-lg">
+          <p className="text-5xl font-bold text-yellow-300" style={{fontFamily: 'Georgia, serif'}}>{habit.currentStreak}</p>
+          <p className="mt-2 text-sm font-bold text-yellow-200">🔥 STREAK OF FIRE</p>
+          <p className="mt-1 text-xs text-yellow-300">consecutive victories</p>
         </div>
-        <div className="rounded-xl border border-purple-200 bg-purple-50 p-6 text-center">
-          <p className="text-4xl font-bold text-purple-900">{habit.bestStreak}</p>
-          <p className="mt-2 text-sm font-medium text-purple-700">⭐ Best Streak</p>
-          <p className="mt-1 text-xs text-purple-600">personal record</p>
+        <div className="rounded-xl border-2 border-amber-600 bg-gradient-to-br from-amber-800 to-amber-900 p-6 text-center shadow-lg">
+          <p className="text-5xl font-bold text-amber-300" style={{fontFamily: 'Georgia, serif'}}>{habit.bestStreak}</p>
+          <p className="mt-2 text-sm font-bold text-amber-200">👑 LEGENDARY RECORD</p>
+          <p className="mt-1 text-xs text-amber-300">greatest achievement</p>
         </div>
-        <div className="rounded-xl border border-cyan-200 bg-cyan-50 p-6 text-center">
-          <p className="text-4xl font-bold text-cyan-900">{habit.checkInCount}</p>
-          <p className="mt-2 text-sm font-medium text-cyan-700">📊 Total Check-Ins</p>
-          <p className="mt-1 text-xs text-cyan-600">all time</p>
+        <div className="rounded-xl border-2 border-cyan-700 bg-gradient-to-br from-cyan-900 to-cyan-950 p-6 text-center shadow-lg">
+          <p className="text-5xl font-bold text-cyan-300" style={{fontFamily: 'Georgia, serif'}}>{habit.checkInCount}</p>
+          <p className="mt-2 text-sm font-bold text-cyan-200">⚔️ BATTLES WON</p>
+          <p className="mt-1 text-xs text-cyan-300">total victories</p>
         </div>
       </div>
 
@@ -183,12 +191,12 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
           size="lg"
           onClick={handleCheckIn}
           disabled={checkIn.isPending || alreadyCheckedInToday || checkInsLoading}
-          className="w-full"
+          className="w-full bg-gradient-to-r from-green-700 to-green-800 hover:from-green-600 hover:to-green-700 text-green-50 font-bold border-2 border-green-600 text-lg"
         >
-          {checkIn.isPending ? 'Checking in...' : checkInsLoading ? 'Loading...' : alreadyCheckedInToday ? 'Already checked in today' : 'Check In'}
+          {checkIn.isPending ? '⏳ Completing Quest...' : checkInsLoading ? 'Loading...' : alreadyCheckedInToday ? '✓ Quest Completed Today!' : '⚔️ Complete Today\'s Quest'}
         </Button>
       ) : (
-        <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+        <div className="rounded-lg border-2 border-gray-700 bg-gradient-to-r from-gray-800 to-gray-900 px-4 py-3 text-sm text-gray-300 font-semibold">
           {habit.status === 'PAUSED'
             ? 'This habit is paused — resume it to check in.'
             : 'This habit is archived and read-only — check-ins are disabled.'}
@@ -196,30 +204,30 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
       )}
 
       {checkIn.isError && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-            <h2 className="mb-4 text-lg font-semibold text-slate-900">Warning</h2>
-            <p className="mb-6 text-slate-700">{checkIn.error?.message ?? 'Already checked in today'}</p>
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75">
+          <div className="w-full max-w-md rounded-xl bg-gradient-to-b from-amber-900 to-amber-950 p-6 shadow-2xl border-2 border-amber-700">
+            <h2 className="mb-4 text-lg font-bold text-amber-300">⚠️ Quest Warning</h2>
+            <p className="mb-6 text-amber-100">{checkIn.error?.message ?? 'Already completed today'}</p>
             <button
               onClick={() => checkIn.reset()}
-              className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="w-full rounded-lg bg-amber-700 hover:bg-amber-600 px-4 py-2 text-sm font-bold text-amber-50 border border-amber-600 transition-all"
             >
-              OK
+              Understood
             </button>
           </div>
         </div>
       )}
 
       {cancelCheckIn.isError && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-            <h2 className="mb-4 text-lg font-semibold text-slate-900">Error</h2>
-            <p className="mb-6 text-slate-700">{cancelCheckIn.error?.message ?? 'Failed to cancel check-in'}</p>
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75">
+          <div className="w-full max-w-md rounded-xl bg-gradient-to-b from-red-900 to-red-950 p-6 shadow-2xl border-2 border-red-700">
+            <h2 className="mb-4 text-lg font-bold text-red-300">🔥 Error in Battle</h2>
+            <p className="mb-6 text-red-100">{cancelCheckIn.error?.message ?? 'Failed to cancel victory'}</p>
             <button
               onClick={() => cancelCheckIn.reset()}
-              className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="w-full rounded-lg bg-red-700 hover:bg-red-600 px-4 py-2 text-sm font-bold text-red-50 border border-red-600 transition-all"
             >
-              OK
+              Understood
             </button>
           </div>
         </div>
@@ -272,8 +280,8 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
         </div>
       )}
 
-      <div className="rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="mb-4 text-lg font-semibold text-slate-900">Check-In History</h2>
+      <div className="rounded-xl border-2 border-amber-700 bg-gradient-to-br from-amber-900 to-amber-950 p-6 shadow-lg">
+        <h2 className="mb-4 text-lg font-bold text-amber-400 uppercase tracking-widest">📜 Battle Records</h2>
         {checkIns && checkIns.length > 0 ? (
           <div className="space-y-3">
             {checkIns.map((ci) => {
@@ -282,28 +290,28 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
               return (
                 <div
                   key={ci.id}
-                  className="border-b border-slate-100 pb-3 last:border-0"
+                  className="border-b border-amber-700 pb-3 last:border-0 bg-amber-950/50 p-3 rounded-lg"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-600">
-                      {new Date(ci.checkInDate).toLocaleDateString()}
+                    <span className="text-amber-300 font-medium">
+                      ⚔️ {new Date(ci.checkInDate).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                     </span>
                     <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium text-green-600">✓</span>
+                      <span className="text-sm font-bold text-green-400">✓ Victory</span>
                       <button
                         type="button"
                         onClick={() => handleCancelCheckIn(ci.id)}
                         disabled={isDeleting || isArchived}
-                        aria-label="Cancel check-in"
-                        className="text-slate-400 transition-colors hover:text-red-600 disabled:pointer-events-none disabled:opacity-50"
+                        aria-label="Erase this victory"
+                        className="text-amber-400 transition-colors hover:text-red-400 disabled:pointer-events-none disabled:opacity-50"
                       >
                         <X className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
                   {ci.comment && (
-                    <p className="mt-2 text-sm text-slate-600 italic">
-                      "{ci.comment}"
+                    <p className="mt-2 text-sm text-amber-200 italic border-l-2 border-amber-600 pl-2">
+                      &quot;{ci.comment}&quot;
                     </p>
                   )}
                 </div>
@@ -311,7 +319,7 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
             })}
           </div>
         ) : (
-          <p className="text-slate-600">No check-ins yet. Start tracking today!</p>
+          <p className="text-amber-300 italic">No battles recorded yet. Begin your quest today!</p>
         )}
       </div>
     </div>
