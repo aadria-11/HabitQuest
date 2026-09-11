@@ -22,7 +22,7 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
   const checkIn = useCheckIn();
   const cancelCheckIn = useCancelCheckIn();
   const deleteHabit = useDeleteHabit();
-  const { data: checkIns } = useCheckIns(id);
+  const { data: checkIns, isLoading: checkInsLoading } = useCheckIns(id);
   const [showCommentDialog, setShowCommentDialog] = useState(false);
   const [comment, setComment] = useState('');
 
@@ -50,6 +50,12 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
       setShowCommentDialog(false);
     }
   }, [checkIn.isPending, checkIn.isSuccess, showCommentDialog]);
+
+  useEffect(() => {
+    if (checkIn.isError && showCommentDialog) {
+      setShowCommentDialog(false);
+    }
+  }, [checkIn.isError, showCommentDialog]);
 
   const handleCancelCheckIn = async (checkInId: string) => {
     if (!confirm('Cancel this check-in?')) return;
@@ -125,10 +131,10 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
         <Button
           size="lg"
           onClick={handleCheckIn}
-          disabled={checkIn.isPending || alreadyCheckedInToday}
+          disabled={checkIn.isPending || alreadyCheckedInToday || checkInsLoading}
           className="w-full"
         >
-          {checkIn.isPending ? 'Checking in...' : alreadyCheckedInToday ? 'Already checked in today' : 'Check In'}
+          {checkIn.isPending ? 'Checking in...' : checkInsLoading ? 'Loading...' : alreadyCheckedInToday ? 'Already checked in today' : 'Check In'}
         </Button>
       ) : (
         <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
@@ -138,19 +144,35 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
         </div>
       )}
 
-      <Dialog
-        open={checkIn.isError}
-        title="Warning"
-        message={checkIn.error?.message ?? 'Already checked in today'}
-        onClose={() => checkIn.reset()}
-      />
+      {checkIn.isError && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+            <h2 className="mb-4 text-lg font-semibold text-slate-900">Warning</h2>
+            <p className="mb-6 text-slate-700">{checkIn.error?.message ?? 'Already checked in today'}</p>
+            <button
+              onClick={() => checkIn.reset()}
+              className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
-      <Dialog
-        open={cancelCheckIn.isError}
-        title="Error"
-        message={cancelCheckIn.error?.message ?? 'Failed to cancel check-in'}
-        onClose={() => cancelCheckIn.reset()}
-      />
+      {cancelCheckIn.isError && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+            <h2 className="mb-4 text-lg font-semibold text-slate-900">Error</h2>
+            <p className="mb-6 text-slate-700">{cancelCheckIn.error?.message ?? 'Failed to cancel check-in'}</p>
+            <button
+              onClick={() => cancelCheckIn.reset()}
+              className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
       {showCommentDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
