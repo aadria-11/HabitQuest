@@ -234,16 +234,16 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
       )}
 
       {showCommentDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75">
+          <div className="w-full max-w-md rounded-xl bg-gradient-to-b from-amber-900 to-amber-950 p-6 shadow-2xl border-2 border-amber-700">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">Add Check-In Note</h2>
+              <h2 className="text-lg font-bold text-amber-300">⚔️ Victory Note</h2>
               <button
                 onClick={() => {
                   setShowCommentDialog(false);
                   setComment('');
                 }}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-amber-400 hover:text-amber-300 transition-colors"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />
@@ -252,28 +252,28 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Optional: Add a note about today's check-in..."
+              placeholder="Optional: Record your battle notes..."
               maxLength={500}
-              className="mb-4 w-full rounded-md border border-slate-300 p-3 focus:border-blue-500 focus:outline-none"
+              className="mb-4 w-full rounded-lg border-2 border-amber-700 bg-amber-950 p-3 text-amber-100 placeholder-amber-500/50 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
               rows={4}
             />
-            <p className="mb-4 text-xs text-slate-500">{comment.length}/500</p>
+            <p className="mb-4 text-xs text-amber-300">{comment.length}/500</p>
             <div className="flex gap-2">
               <button
                 onClick={() => {
                   setShowCommentDialog(false);
                   setComment('');
                 }}
-                className="flex-1 rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="flex-1 rounded-lg border-2 border-amber-700 bg-amber-950 px-4 py-2 text-sm font-bold text-amber-300 hover:bg-amber-900 transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleConfirmCheckIn(comment)}
                 disabled={checkIn.isPending}
-                className="flex-1 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                className="flex-1 rounded-lg bg-gradient-to-r from-green-700 to-green-800 hover:from-green-600 hover:to-green-700 px-4 py-2 text-sm font-bold text-green-50 border-2 border-green-600 disabled:opacity-50 transition-all"
               >
-                {checkIn.isPending ? 'Checking in...' : 'Check In'}
+                {checkIn.isPending ? '⏳ Recording...' : '✓ Record Victory'}
               </button>
             </div>
           </div>

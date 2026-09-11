@@ -52,71 +52,71 @@ export function HabitForm({ initialData, onSubmit, isLoading }: HabitFormProps) 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6 rounded-xl border-2 border-amber-700 bg-gradient-to-br from-amber-900 to-amber-950 p-6 shadow-lg">
       <div>
-        <label htmlFor="name" className="block text-sm font-medium">
-          Name
+        <label htmlFor="name" className="block text-sm font-bold text-amber-300 uppercase tracking-wider">
+          Quest Name
         </label>
         <input
           id="name"
           type="text"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+          className="mt-2 block w-full rounded-lg border-2 border-amber-700 bg-amber-950 px-3 py-2 text-amber-100 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
           required
         />
-        {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+        {errors.name && <p className="mt-1 text-sm text-red-400 font-semibold">{errors.name}</p>}
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium">
-          Description
+        <label htmlFor="description" className="block text-sm font-bold text-amber-300 uppercase tracking-wider">
+          Quest Description
         </label>
         <textarea
           id="description"
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+          className="mt-2 block w-full rounded-lg border-2 border-amber-700 bg-amber-950 px-3 py-2 text-amber-100 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
           rows={3}
         />
-        {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
+        {errors.description && <p className="mt-1 text-sm text-red-400 font-semibold">{errors.description}</p>}
       </div>
 
       <div>
-        <label htmlFor="startDate" className="block text-sm font-medium">
-          Start Date
+        <label htmlFor="startDate" className="block text-sm font-bold text-amber-300 uppercase tracking-wider">
+          Quest Began
         </label>
         <input
           id="startDate"
           type="date"
           value={formData.startDate}
           onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+          className="mt-2 block w-full rounded-lg border-2 border-amber-700 bg-amber-950 px-3 py-2 text-amber-100 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
           required
         />
-        {errors.startDate && <p className="mt-1 text-sm text-red-600">{errors.startDate}</p>}
+        {errors.startDate && <p className="mt-1 text-sm text-red-400 font-semibold">{errors.startDate}</p>}
       </div>
 
       <div>
-        <label htmlFor="status" className="block text-sm font-medium">
-          Status
+        <label htmlFor="status" className="block text-sm font-bold text-amber-300 uppercase tracking-wider">
+          Quest Status
         </label>
         <select
           id="status"
           value={formData.status}
           onChange={(e) => setFormData({ ...formData, status: e.target.value as HabitStatus })}
-          className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+          className="mt-2 block w-full rounded-lg border-2 border-amber-700 bg-amber-950 px-3 py-2 text-amber-100 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
         >
-          <option value="ACTIVE">Active</option>
-          <option value="PAUSED">Paused</option>
-          <option value="ARCHIVED">Archived</option>
+          <option value="ACTIVE">🟢 Active</option>
+          <option value="PAUSED">⏸️ Paused</option>
+          <option value="ARCHIVED">🔒 Sealed</option>
         </select>
       </div>
 
-      {errors.submit && <p className="text-sm text-red-600">{errors.submit}</p>}
+      {errors.submit && <p className="text-sm text-red-400 font-semibold">{errors.submit}</p>}
 
-      <Button type="submit" disabled={isLoading}>
-        {isLoading ? 'Saving...' : 'Save Habit'}
+      <Button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 text-amber-50 font-bold border-2 border-amber-600 text-lg">
+        {isLoading ? '⏳ Saving Quest...' : '💾 Save Quest'}
       </Button>
     </form>
   );
