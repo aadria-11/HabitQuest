@@ -107,16 +107,29 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-8">
-      <div className="flex items-center justify-between">
+      {/* Welcome Header */}
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-100">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1">
+          🎯 Your Habit Dashboard
+        </h1>
+        <p className="text-slate-600 text-sm">
+          Build better habits, one day at a time ✨
+        </p>
+      </div>
+
+      {/* Search & Create */}
+      <div className="flex items-center justify-between gap-4">
         <input
           type="text"
-          placeholder="Search habits..."
+          placeholder="Search your habits..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-md border border-slate-300 px-3 py-2"
+          className="flex-1 rounded-lg border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
         />
-        <Link href="/habits/new" className="ml-4">
-          <Button>Create Habit</Button>
+        <Link href="/habits/new">
+          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+            ➕ Create Habit
+          </Button>
         </Link>
       </div>
 
