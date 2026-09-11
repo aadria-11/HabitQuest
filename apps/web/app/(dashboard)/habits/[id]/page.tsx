@@ -82,7 +82,7 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
     <div className="mx-auto max-w-4xl space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-3xl font-bold text-amber-400" style={{fontFamily: 'Georgia, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.5)'}}>{habit.name}</h1>
+          <h1 className="text-4xl font-bold text-amber-400" style={{fontFamily: 'Georgia, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.5)', WebkitTextStroke: '1px #78350f'}}>{habit.name}</h1>
           {isArchived && (
             <span className="rounded-lg bg-gradient-to-r from-gray-700 to-gray-800 px-3 py-1 text-xs font-bold text-gray-200 border border-gray-600 uppercase tracking-wider">
               Quest Sealed
@@ -282,7 +282,14 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
 
       <div className="rounded-xl border-2 border-amber-700 bg-gradient-to-br from-amber-900 to-amber-950 p-6 shadow-lg">
         <h2 className="mb-4 text-lg font-bold text-amber-400 uppercase tracking-widest">📜 Battle Records</h2>
-        {checkIns && checkIns.length > 0 ? (
+        {checkInsLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="text-center">
+              <div className="inline-block h-6 w-6 animate-spin rounded-full border-3 border-amber-400 border-t-transparent mb-3"></div>
+              <p className="text-amber-300 font-semibold text-sm">Loading battle history...</p>
+            </div>
+          </div>
+        ) : checkIns && checkIns.length > 0 ? (
           <div className="space-y-3">
             {checkIns.map((ci) => {
               const isDeleting =
@@ -290,7 +297,9 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
               return (
                 <div
                   key={ci.id}
-                  className="border-b border-amber-700 pb-3 last:border-0 bg-amber-950/50 p-3 rounded-lg"
+                  className={`border-b border-amber-700 pb-3 last:border-0 bg-amber-950/50 p-3 rounded-lg transition-all ${
+                    isDeleting ? 'opacity-60' : ''
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-amber-300 font-medium">
@@ -303,7 +312,7 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
                         onClick={() => handleCancelCheckIn(ci.id)}
                         disabled={isDeleting || isArchived}
                         aria-label="Erase this victory"
-                        className="text-amber-400 transition-colors hover:text-red-400 disabled:pointer-events-none disabled:opacity-50"
+                        className="text-amber-400 transition-all hover:text-red-400 hover:scale-110 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -319,7 +328,11 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
             })}
           </div>
         ) : (
-          <p className="text-amber-300 italic">No battles recorded yet. Begin your quest today!</p>
+          <div className="py-8 text-center">
+            <p className="text-3xl mb-3">🌟</p>
+            <p className="text-amber-300 italic text-lg">No battles recorded yet</p>
+            <p className="text-amber-400 text-sm mt-2">Begin your quest today to record your first victory!</p>
+          </div>
         )}
       </div>
     </div>

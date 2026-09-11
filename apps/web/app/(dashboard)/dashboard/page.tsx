@@ -187,28 +187,31 @@ export default function DashboardPage() {
 
       <div>
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">{getFilterLabel()}</h2>
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">📜</span>
+            <h2 className="text-2xl font-bold text-amber-900" style={{fontFamily: 'Georgia, serif', textShadow: '1px 1px 2px rgba(0,0,0,0.1)'}}>{getFilterLabel()}</h2>
+          </div>
           {(activeFilter === 'ACTIVE' || activeFilter === 'ALL') && (
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <button
                 onClick={() => setCompletionFilter(completionFilter === 'COMPLETED_TODAY' ? null : 'COMPLETED_TODAY')}
-                className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all border-2 ${
+                className={`rounded-lg px-4 py-2 text-sm font-bold transition-all border-2 uppercase tracking-wider ${
                   completionFilter === 'COMPLETED_TODAY'
-                    ? 'bg-green-700 text-amber-100 border-green-600'
-                    : 'bg-amber-900 text-amber-200 border-amber-700 hover:bg-amber-800'
+                    ? 'bg-gradient-to-r from-emerald-700 to-emerald-800 text-amber-50 border-emerald-600 shadow-lg ring-2 ring-amber-400'
+                    : 'bg-gradient-to-r from-amber-900 to-amber-950 text-amber-200 border-amber-700 hover:from-amber-800 hover:to-amber-900'
                 }`}
               >
                 ✓ Completed Quest
               </button>
               <button
                 onClick={() => setCompletionFilter(completionFilter === 'NOT_COMPLETED_TODAY' ? null : 'NOT_COMPLETED_TODAY')}
-                className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all border-2 ${
+                className={`rounded-lg px-4 py-2 text-sm font-bold transition-all border-2 uppercase tracking-wider ${
                   completionFilter === 'NOT_COMPLETED_TODAY'
-                    ? 'bg-amber-700 text-amber-50 border-amber-600'
-                    : 'bg-amber-900 text-amber-200 border-amber-700 hover:bg-amber-800'
+                    ? 'bg-gradient-to-r from-amber-900 to-amber-950 text-amber-50 border-amber-600 shadow-lg ring-2 ring-amber-400'
+                    : 'bg-gradient-to-r from-amber-900 to-amber-950 text-amber-200 border-amber-700 hover:from-amber-800 hover:to-amber-900'
                 }`}
               >
-                ○ Unfinished Quest
+                ⊘ Unfinished Quest
               </button>
             </div>
           )}

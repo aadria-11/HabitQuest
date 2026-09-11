@@ -3,11 +3,11 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: habit-tracker-postgres
+    container_name: habit-quest-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: habit_tracker
+      POSTGRES_DB: habit_quest
     ports:
       - "5432:5432"
     volumes:

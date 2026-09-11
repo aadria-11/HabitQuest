@@ -41,7 +41,7 @@ Open a terminal and connect to PostgreSQL:
 
 ```bash
 # Windows/macOS/Linux
-psql -U postgres -c "CREATE DATABASE habit_tracker;"
+psql -U postgres -c "CREATE DATABASE habit_quest;"
 ```
 
 When prompted for password, enter the one you set during installation.
@@ -58,20 +58,26 @@ Edit the following in `apps/api/.env`:
 
 ```
 # If you set a different password during PostgreSQL install:
-DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/habit_tracker"
+DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/habit_quest"
 
 # Generate random 32+ char strings for secrets:
 AUTH_SECRET="$(openssl rand -base64 32)"
 INTERNAL_SECRET="$(openssl rand -base64 32)"
 
-# For Entra ID, you'll need to:
-# 1. Go to https://portal.azure.com
-# 2. Create an app registration in Azure AD
-# 3. Copy the Client ID and generate a Client Secret
-# 4. Set Redirect URI to http://localhost:3000/auth/callback/azure-ad
-ENTRA_ID_CLIENT_ID="your-client-id-from-azure-ad"
-ENTRA_ID_CLIENT_SECRET="your-client-secret-from-azure-ad"
-ENTRA_ID_TENANT="common"
+# For Google OAuth, you'll need to:
+# 1. Go to https://console.cloud.google.com/
+# 2. Create a new project or select existing
+# 3. Enable OAuth 2.0 credentials (OAuth consent screen → Create credentials)
+# 4. Add redirect URI: http://localhost:3000/api/auth/callback/google
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
+# For GitHub OAuth, you'll need to:
+# 1. Go to GitHub Settings → Developer settings → OAuth Apps
+# 2. Create a new OAuth App
+# 3. Add redirect URI: http://localhost:3000/api/auth/callback/github
+GITHUB_CLIENT_ID="your-github-client-id"
+GITHUB_CLIENT_SECRET="your-github-client-secret"
 ```
 
 For the frontend, create `apps/web/.env.local`:
@@ -114,8 +120,8 @@ You should see: `Ready in XsXXXms`
 ## Step 6: Open the App
 
 1. Open your browser to http://localhost:3000
-2. Click "Sign in with Microsoft"
-3. Sign in with your Microsoft/Entra ID account
+2. Click "Sign in with Google" or "Sign in with GitHub"
+3. Sign in with your account
 4. Start creating habits!
 
 ---
@@ -134,7 +140,7 @@ You should see: `Ready in XsXXXms`
 
 Run:
 ```bash
-psql -U postgres -c "CREATE DATABASE habit_tracker;"
+psql -U postgres -c "CREATE DATABASE habit_quest;"
 ```
 
 ### "Port 3000 or 3001 already in use"
@@ -145,12 +151,11 @@ Change the port in the respective `.env` file and `package.json` script.
 
 Ensure `NEXTAUTH_SECRET` and `AUTH_SECRET` are set in the `.env` files.
 
-### "Entra ID redirect URI mismatch"
+### "OAuth redirect URI mismatch"
 
-The callback URL must match exactly. In Azure Portal:
-- Go to your app registration
-- Settings → Redirect URIs
-- Add `http://localhost:3000/auth/callback/azure-ad`
+The callback URL must match exactly:
+- **Google:** Add `http://localhost:3000/api/auth/callback/google` in Google Cloud Console
+- **GitHub:** Add `http://localhost:3000/api/auth/callback/github` in GitHub OAuth app settings
 
 ---
 

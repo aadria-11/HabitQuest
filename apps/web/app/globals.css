@@ -5,9 +5,42 @@ html {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900;
+  @apply bg-amber-50 text-slate-900;
 }
 
 button {
-  @apply transition-colors;
+  @apply transition-all duration-200;
+}
+
+button:focus-visible {
+  @apply ring-2 ring-offset-2 ring-amber-400 ring-offset-amber-50 rounded-lg;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  @apply ring-2 ring-offset-0 ring-amber-400;
+}
+
+/* Consistent focus states */
+a:focus-visible {
+  @apply outline-none ring-2 ring-offset-2 ring-amber-400 rounded-lg;
+}
+
+/* Smooth transitions for interactive elements */
+input,
+textarea,
+select,
+button {
+  @apply transition-all duration-200;
+}
+
+/* Disabled state styling */
+button:disabled {
+  @apply cursor-not-allowed;
+}
+
+/* Consistent hover states for links */
+a {
+  @apply transition-colors duration-200;
 }

@@ -1,10 +1,10 @@
-# Habit Tracker
+# HabitQuest
 
 A multi-user web application for tracking daily habits with real-time synchronization across browser sessions. Built with Next.js, Express, PostgreSQL, and Socket.IO.
 
 ## Features
 
-- **SSO Authentication** — Microsoft Entra ID (Azure AD) sign-in via Auth.js
+- **SSO Authentication** — Google OIDC and GitHub sign-in via Auth.js
 - **Habit Management** — Create, edit, delete, and manage personal habits
 - **Daily Check-Ins** — Log daily habit completion with streak tracking
 - **Streak Calculation** — Current and best streak metrics
@@ -30,7 +30,8 @@ A multi-user web application for tracking daily habits with real-time synchroniz
 
 **Auth:**
 - Auth.js (next-auth)
-- Microsoft Entra ID (Azure AD)
+- Google OIDC
+- GitHub
 
 **Testing:**
 - Vitest
@@ -41,7 +42,7 @@ A multi-user web application for tracking daily habits with real-time synchroniz
 ## Project Structure
 
 ```
-habit-tracker/
+habit-quest/
 ├── apps/
 │   ├── web/              # Next.js frontend
 │   └── api/              # Express backend
@@ -58,7 +59,8 @@ habit-tracker/
 
 - Node.js ≥ 20
 - Docker (for local PostgreSQL)
-- Microsoft Entra ID (Azure AD) tenant and app registration
+- Google OAuth credentials (OIDC)
+- GitHub OAuth credentials
 
 ### Installation
 
@@ -73,8 +75,9 @@ habit-tracker/
    # Edit .env with your values:
    # - DATABASE_URL (PostgreSQL connection)
    # - AUTH_SECRET (min 32 chars, random)
-   # - ENTRA_ID_CLIENT_ID, ENTRA_ID_CLIENT_SECRET, ENTRA_ID_TENANT
-   # - INTERNAL_SECRET (min 32 chars, random)
+   # - GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (from Google Cloud Console)
+   # - GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET (from GitHub Settings)
+   # - API_INTERNAL_SECRET (min 32 chars, random)
    ```
 
 3. **Start PostgreSQL:**
@@ -95,12 +98,26 @@ habit-tracker/
    - Frontend: http://localhost:3000
    - Backend: http://localhost:3001
 
+## OAuth Configuration
+
+### Google OIDC Setup
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create or select a project
+3. Enable OAuth 2.0 credentials (OAuth consent screen → Create credentials)
+4. Add redirect URI: `http://localhost:3000/api/auth/callback/google` (production: `https://your-domain/api/auth/callback/google`)
+5. Copy Client ID and Secret to `.env` as `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+
+### GitHub OAuth Setup
+1. Go to GitHub Settings → Developer settings → OAuth Apps → New OAuth App
+2. Set Authorization callback URL: `http://localhost:3000/api/auth/callback/github` (production: `https://your-domain/api/auth/callback/github`)
+3. Copy Client ID and Secret to `.env` as `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`
+
 ## Architecture
 
 ### Authentication Flow
 
 1. User visits `/` → redirects to `/login` if not authenticated
-2. Clicks "Sign in with Microsoft" → Auth.js redirects to Entra ID
+2. Clicks "Sign in with Google" or "Sign in with GitHub" → Auth.js redirects to provider
 3. After sign-in, Auth.js `jwt` callback:
    - Calls Express `POST /internal/users/sync` to upsert user in Prisma
    - Receives back internal `userId`
@@ -181,16 +198,17 @@ This was a deliberate choice: since archiving is permanent, requiring archival b
 ## WebSocket Events
 
 **Client → Server:**
-- `habit:subscribe` — Join user's room (automatic on connect)
-- `habit:update` — (Not currently used; REST is primary)
-- `habit:checkin` — (Not currently used; REST is primary)
+- `subscribe` — Join user's per-user room (payload: `{ userId }`)
+- `milestone:ack` — Acknowledge milestone notification (payload: `{ notificationId }`)
 
 **Server → Client:**
-- `habit:created` — New habit created (payload: `Habit`)
-- `habit:updated` — Habit modified (payload: `Habit`)
-- `habit:deleted` — Habit deleted (payload: `habitId`)
-- `habit:checkedin` — Daily check-in created (payload: `{ habitId, checkInDate }`)
-- `streak:updated` — Streaks recomputed (payload: `{ habitId, currentStreak, bestStreak }`)
+- `milestone` — Milestone reached (payload: `{ notificationId, habitId, habitName, milestone }`)
+
+**Milestone Notification Rules:**
+- Triggers when `currentStreak` reaches 3, 7, or 30 days
+- Only sent once per habit per milestone (deduplicated by `habitId_milestone` unique constraint)
+- Only for habits with status `ACTIVE`
+- Acknowledged via `milestone:ack` event; client updates `acknowledged: true` in DB
 
 ## Testing
 
@@ -208,7 +226,7 @@ npm run typecheck
 npm run lint
 ```
 
-> E2E tests with Playwright are scaffolded but not yet implemented. A test-only auth bypass is needed for CI to seed sessions without interactive Microsoft login.
+> E2E tests with Playwright are scaffolded but not yet implemented. A test-only auth bypass is needed for CI to seed sessions without interactive OAuth login.
 
 ## Deployment
 
@@ -230,8 +248,8 @@ npm run lint
 
 ## Development Notes
 
-- **Timezone:** Stored as UTC dates, displayed in user's local timezone
-- **Streaks:** Calculated from check-in history; current streak breaks if today or yesterday not checked in
+- **Timezone:** Check-in dates stored as UTC; UI displays and accepts dates in user's local timezone. Streak calculations work across midnight in the user's local timezone.
+- **Streaks:** Calculated from check-in history. Current streak is broken if both today (in user's local timezone) and yesterday are missing check-ins. Best streak is the highest consecutive days ever achieved.
 - **Validation:** Frontend (Zod schemas) + backend (Zod validation middleware) + DB constraints
 - **CORS:** Enabled on API for frontend origin with `credentials: true` (cookies carry JWT)
 
