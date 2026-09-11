@@ -13,6 +13,13 @@ export async function createCheckIn(habitId: string, userId: string, checkInDate
     throw new Error('Habit not found');
   }
 
+  // Only active habits can be checked in
+  if (habit.status !== 'ACTIVE') {
+    const error = new Error('Habit is not active');
+    (error as any).code = 'HABIT_NOT_ACTIVE';
+    throw error;
+  }
+
   // Parse the date (expecting YYYY-MM-DD)
   const date = new Date(checkInDate);
   date.setHours(0, 0, 0, 0);
@@ -96,6 +103,13 @@ export async function cancelCheckIn(habitId: string, userId: string, checkInId: 
 
   if (!habit) {
     throw new Error('Habit not found');
+  }
+
+  // Archived habits are read-only
+  if (habit.status === 'ARCHIVED') {
+    const error = new Error('Habit is archived');
+    (error as any).code = 'HABIT_ARCHIVED';
+    throw error;
   }
 
   const existing = await prisma.habitCheckIn.findFirst({

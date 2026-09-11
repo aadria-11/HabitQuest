@@ -15,7 +15,7 @@ export default function HabitsPage() {
   const deleteHabit = useDeleteHabit();
 
   const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this habit?')) {
+    if (confirm('Delete this habit? This will permanently delete its check-in history too. This cannot be undone.')) {
       await deleteHabit.mutateAsync(id);
     }
   };
@@ -83,11 +83,17 @@ export default function HabitsPage() {
                     View
                   </Button>
                 </Link>
-                <Link href={`/habits/${habit.id}/edit`}>
-                  <Button variant="outline" size="sm">
+                {habit.status === 'ARCHIVED' ? (
+                  <Button variant="outline" size="sm" disabled title="Archived habits are read-only">
                     Edit
                   </Button>
-                </Link>
+                ) : (
+                  <Link href={`/habits/${habit.id}/edit`}>
+                    <Button variant="outline" size="sm">
+                      Edit
+                    </Button>
+                  </Link>
+                )}
                 <Button
                   variant="destructive"
                   size="sm"

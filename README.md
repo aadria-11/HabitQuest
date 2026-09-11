@@ -164,6 +164,20 @@ When a check-in happens:
 - `GET /auth/callback` — OAuth callback
 - `POST /auth/signout` — Sign-out
 
+## Habit Status Rules
+
+Habits have three statuses: `ACTIVE`, `PAUSED`, `ARCHIVED`.
+
+- **Check-ins:** Only `ACTIVE` habits accept new check-ins (`POST /api/habits/:id/checkin`). Checking in a `PAUSED` or `ARCHIVED` habit returns `403`.
+- **Archived = read-only:** Once a habit is `ARCHIVED`, it cannot be modified in any way — no field updates (`PUT /api/habits/:id`) and no check-in changes, create or cancel (`POST`/`DELETE /api/habits/:id/checkin/...`), are permitted. All such requests return `403`. **Archiving is permanent** — there is no un-archive path.
+- **Viewing and deleting** an archived habit remain available at any time.
+
+### Habit Deletion
+
+`DELETE /api/habits/:id` **cascades**: deleting a habit immediately and permanently removes it along with all of its check-in history (and any milestone notifications), regardless of the habit's current status. There is no "archive first" requirement.
+
+This was a deliberate choice: since archiving is permanent, requiring archival before deletion would force every deletion through an irreversible dead-end state for no added safety. Cascading immediately keeps the existing delete-confirmation dialog as the single safety gate, rather than adding a second one that provides no real protection.
+
 ## WebSocket Events
 
 **Client → Server:**

@@ -19,3 +19,11 @@ describe('Habit Service - Authorization', () => {
     expect(success).toBe(false);
   });
 });
+
+describe('Habit Service - Status Rules', () => {
+  it('updateHabit throws for archived habit', async () => {
+    await expect(
+      habitService.updateHabit('user-123', 'non-existent-id', { name: 'New name' }),
+    ).rejects.toThrow('Habit is archived');
+  });
+});

@@ -27,6 +27,10 @@ export async function createCheckIn(
       return res.status(409).json({ error: 'Already checked in today' });
     }
 
+    if (error.code === 'HABIT_NOT_ACTIVE') {
+      return res.status(403).json({ error: 'Only active habits can be checked in' });
+    }
+
     if (error.message === 'Habit not found') {
       return res.status(404).json({ error: 'Habit not found' });
     }
@@ -66,6 +70,10 @@ export async function cancelCheckIn(
 
     res.status(204).send();
   } catch (error: any) {
+    if (error.code === 'HABIT_ARCHIVED') {
+      return res.status(403).json({ error: 'Archived habits are read-only' });
+    }
+
     if (error.message === 'Habit not found') {
       return res.status(404).json({ error: 'Habit not found' });
     }

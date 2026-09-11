@@ -82,6 +82,13 @@ export async function updateHabit(
   const habit = await getHabit(userId, habitId);
   if (!habit) return null;
 
+  // Archived habits are read-only
+  if (habit.status === 'ARCHIVED') {
+    const error = new Error('Habit is archived');
+    (error as any).code = 'HABIT_ARCHIVED';
+    throw error;
+  }
+
   const updateData: any = {};
   if (data.name) updateData.name = data.name;
   if (data.description !== undefined) updateData.description = data.description;
@@ -106,6 +113,8 @@ export async function deleteHabit(userId: string, habitId: string): Promise<bool
   const habit = await getHabit(userId, habitId);
   if (!habit) return false;
 
+  // Cascade delete: deleting a habit also removes all its check-ins and milestone notifications
+  // (see prisma/schema.prisma: HabitCheckIn.habit and MilestoneNotification.habit both have onDelete: Cascade)
   await prisma.habit.delete({
     where: { id: habitId },
   });

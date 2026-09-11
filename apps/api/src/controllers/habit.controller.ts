@@ -50,10 +50,12 @@ export async function getHabit(
   }
 }
 
+
 export async function createHabit(
   req: Request & AuthenticatedRequest,
   res: Response,
 ) {
+  console.log('REQ USER:', req.user);
   try {
     const parsed = CreateHabitSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -86,7 +88,11 @@ export async function updateHabit(
     }
 
     res.json(habit);
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === 'HABIT_ARCHIVED') {
+      return res.status(403).json({ error: 'Archived habits are read-only and cannot be edited' });
+    }
+
     console.error('Error updating habit:', error);
     res.status(500).json({ error: 'Internal server error' });
   }

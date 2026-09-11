@@ -43,14 +43,26 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
   if (isLoading) return <p className="px-4 py-8 text-slate-600">Loading...</p>;
   if (!habit) return <p className="px-4 py-8 text-slate-600">Habit not found</p>;
 
+  const isArchived = habit.status === 'ARCHIVED';
+  const canCheckIn = habit.status === 'ACTIVE';
+
   return (
     <div className="mx-auto max-w-4xl space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-slate-900">{habit.name}</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-slate-900">{habit.name}</h1>
+          {isArchived && (
+            <span className="rounded bg-slate-100 px-2 py-1 text-xs font-medium text-slate-800">
+              Read-only
+            </span>
+          )}
+        </div>
         <div className="flex gap-2">
-          <Link href={`/habits/${id}/edit`}>
-            <Button variant="outline">Edit</Button>
-          </Link>
+          {!isArchived && (
+            <Link href={`/habits/${id}/edit`}>
+              <Button variant="outline">Edit</Button>
+            </Link>
+          )}
           <Link href="/dashboard">
             <Button variant="secondary">Back</Button>
           </Link>
@@ -68,14 +80,22 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
         <p className="mt-2 text-sm text-slate-600">Status: {habit.status}</p>
       </div>
 
-      <Button
-        size="lg"
-        onClick={handleCheckIn}
-        disabled={checkIn.isPending || alreadyCheckedInToday}
-        className="w-full"
-      >
-        {checkIn.isPending ? 'Checking in...' : alreadyCheckedInToday ? 'Already checked in today' : 'Check In Today'}
-      </Button>
+      {canCheckIn ? (
+        <Button
+          size="lg"
+          onClick={handleCheckIn}
+          disabled={checkIn.isPending || alreadyCheckedInToday}
+          className="w-full"
+        >
+          {checkIn.isPending ? 'Checking in...' : alreadyCheckedInToday ? 'Already checked in today' : 'Check In Today'}
+        </Button>
+      ) : (
+        <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+          {habit.status === 'PAUSED'
+            ? 'This habit is paused — resume it to check in.'
+            : 'This habit is archived and read-only — check-ins are disabled.'}
+        </div>
+      )}
 
       <Dialog
         open={checkIn.isError}
@@ -111,7 +131,7 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
                     <button
                       type="button"
                       onClick={() => handleCancelCheckIn(ci.id)}
-                      disabled={isDeleting}
+                      disabled={isDeleting || isArchived}
                       aria-label="Cancel check-in"
                       className="text-slate-400 transition-colors hover:text-red-600 disabled:pointer-events-none disabled:opacity-50"
                     >
