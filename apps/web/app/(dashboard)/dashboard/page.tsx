@@ -107,28 +107,35 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-8">
-      {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-100">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1">
-          🎯 Your Habit Dashboard
-        </h1>
-        <p className="text-slate-600 text-sm">
-          Build better habits, one day at a time ✨
-        </p>
+      {/* Welcome Header - Lord of the Rings Theme */}
+      <div className="bg-gradient-to-r from-amber-900 via-amber-800 to-green-900 rounded-2xl p-8 border-2 border-amber-700 relative overflow-hidden">
+        {/* Decorative background pattern */}
+        <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(circle, #d4af37 1px, transparent 1px)', backgroundSize: '20px 20px'}}></div>
+        <div className="relative">
+          <h1 className="text-3xl font-bold text-amber-300 mb-2" style={{fontFamily: 'Georgia, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.5)', letterSpacing: '0.05em'}}>
+            ⚔️ Welcome, Brave Adventurer
+          </h1>
+          <p className="text-amber-200 text-sm italic font-medium">
+            &quot;All we have to decide is what quests to undertake and when to undertake them.&quot; - Gandalf the Grey
+          </p>
+          <p className="text-amber-300 text-xs mt-2 font-semibold tracking-widest">
+            Your daily quests await... {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+          </p>
+        </div>
       </div>
 
       {/* Search & Create */}
       <div className="flex items-center justify-between gap-4">
         <input
           type="text"
-          placeholder="Search your habits..."
+          placeholder="Search your quests..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-lg border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          className="flex-1 rounded-lg border-2 border-amber-700 bg-amber-50 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-600 transition-all text-slate-900 placeholder-slate-500"
         />
         <Link href="/habits/new">
-          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-            ➕ Create Habit
+          <Button className="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold border-2 border-amber-500">
+            ⚔️ New Quest
           </Button>
         </Link>
       </div>

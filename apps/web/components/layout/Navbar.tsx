@@ -9,14 +9,19 @@ export function Navbar() {
   const { data: session } = useSession();
 
   return (
-    <nav className="border-b border-slate-200 bg-gradient-to-r from-white to-blue-50 shadow-sm">
+    <nav className="border-b-2 border-amber-700 bg-gradient-to-r from-amber-950 via-amber-900 to-amber-950 shadow-lg">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2 group">
-            <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-2 group-hover:shadow-lg transition-shadow">
-              <span className="text-xl">✨</span>
+          <Link href="/dashboard" className="flex items-center gap-3 group">
+            <div className="bg-gradient-to-br from-amber-500 to-amber-700 rounded-lg p-2 group-hover:shadow-xl transition-all group-hover:scale-110 border-2 border-amber-400">
+              <span className="text-2xl">⚔️</span>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent group-hover:from-blue-500 group-hover:to-purple-500 transition-all">Habit Tracker</span>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold text-amber-400 group-hover:text-amber-300 transition-all" style={{fontFamily: 'Georgia, serif', letterSpacing: '0.05em'}}>
+                HabitQuest
+              </span>
+              <span className="text-xs text-amber-300 font-medium tracking-widest">THE QUEST AWAITS</span>
+            </div>
           </Link>
 
           <div className="flex items-center gap-4">
