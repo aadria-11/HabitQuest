@@ -20,9 +20,8 @@ export async function createCheckIn(habitId: string, userId: string, checkInDate
     throw error;
   }
 
-  // Parse the date (expecting YYYY-MM-DD)
+  // Parse the date (expecting YYYY-MM-DD); new Date() parses date-only strings as UTC midnight.
   const date = new Date(checkInDate);
-  date.setHours(0, 0, 0, 0);
 
   // Check if check-in already exists for this date
   const existing = await prisma.habitCheckIn.findUnique({
