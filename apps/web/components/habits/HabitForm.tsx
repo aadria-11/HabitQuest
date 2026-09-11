@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { CreateHabitSchema } from '@shared/schemas';
-import { Habit } from '@shared/types';
+import { Habit, HabitStatus } from '@shared/types';
 
 interface HabitFormProps {
   initialData?: Habit;
@@ -12,18 +12,23 @@ interface HabitFormProps {
 }
 
 export function HabitForm({ initialData, onSubmit, isLoading }: HabitFormProps) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    description: string;
+    startDate: string;
+    status: HabitStatus;
+  }>({
     name: initialData?.name || '',
     description: initialData?.description || '',
     startDate: initialData?.startDate
       ? new Date(initialData.startDate).toISOString().split('T')[0]
       : new Date().toISOString().split('T')[0],
-    status: initialData?.status || 'ACTIVE',
+    status: (initialData?.status || 'ACTIVE') as HabitStatus,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrors({});
 
@@ -99,7 +104,7 @@ export function HabitForm({ initialData, onSubmit, isLoading }: HabitFormProps) 
         <select
           id="status"
           value={formData.status}
-          onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+          onChange={(e) => setFormData({ ...formData, status: e.target.value as HabitStatus })}
           className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
         >
           <option value="ACTIVE">Active</option>
