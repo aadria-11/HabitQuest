@@ -170,16 +170,16 @@ export default function DashboardPage() {
         />
         {bestStreakHabit ? (
           <Link href={`/habits/${bestStreakHabit.id}`}>
-            <div className="rounded-lg border border-purple-200 bg-purple-50 p-4 text-left transition-all">
-              <p className="text-xs font-medium text-purple-600">Best Streak</p>
-              <p className="mt-2 text-sm font-medium text-purple-900">{bestStreakHabit.name}</p>
-              <p className="text-2xl font-bold text-purple-900">{maxBestStreak} days ⭐</p>
+            <div className="rounded-xl border-2 border-yellow-600 bg-gradient-to-br from-yellow-900 to-yellow-950 p-5 text-left transition-all hover:shadow-lg hover:scale-105 shadow-md">
+              <p className="text-xs font-bold text-yellow-300 uppercase tracking-widest">👑 Legendary</p>
+              <p className="mt-2 text-sm font-bold text-yellow-200">{bestStreakHabit.name}</p>
+              <p className="text-3xl font-bold text-yellow-300" style={{fontFamily: 'Georgia, serif'}}>{maxBestStreak} <span className="text-xl">⭐</span></p>
             </div>
           </Link>
         ) : (
-          <div className="rounded-lg border border-purple-200 bg-purple-50 p-4 text-left">
-            <p className="text-xs font-medium text-purple-600">Best Streak</p>
-            <p className="mt-2 text-2xl font-bold text-purple-900">— ⭐</p>
+          <div className="rounded-xl border-2 border-yellow-600 bg-gradient-to-br from-yellow-900 to-yellow-950 p-5 text-left shadow-md">
+            <p className="text-xs font-bold text-yellow-300 uppercase tracking-widest">👑 Legendary</p>
+            <p className="mt-4 text-3xl font-bold text-yellow-300">— <span className="text-xl">⭐</span></p>
           </div>
         )}
 
@@ -331,30 +331,44 @@ function HabitCardWithCheckIn({ habit, onCheckInStatusChange }: HabitCardWithChe
   }, [checkIns, habit.id, onCheckInStatusChange]);
 
   const statusColorMap: Record<string, string> = {
-    ACTIVE: 'bg-green-50 border-green-200',
-    PAUSED: 'bg-amber-50 border-amber-200',
-    ARCHIVED: 'bg-slate-50 border-slate-200',
+    ACTIVE: 'from-green-900 to-green-950 border-green-700',
+    PAUSED: 'from-amber-800 to-amber-900 border-amber-700',
+    ARCHIVED: 'from-gray-800 to-gray-900 border-gray-700',
   };
-  const statusColorClass = statusColorMap[habit.status] || 'bg-white border-slate-200';
+  const statusColorClass = statusColorMap[habit.status] || 'from-amber-900 to-amber-950 border-amber-700';
 
   const statusLabelMap: Record<string, string> = {
-    ACTIVE: 'bg-green-100 text-green-800',
-    PAUSED: 'bg-amber-100 text-amber-800',
-    ARCHIVED: 'bg-slate-100 text-slate-800',
+    ACTIVE: 'bg-green-700 text-green-100 border-green-600',
+    PAUSED: 'bg-amber-700 text-amber-100 border-amber-600',
+    ARCHIVED: 'bg-gray-700 text-gray-200 border-gray-600',
   };
-  const statusLabelClass = statusLabelMap[habit.status] || 'bg-slate-100 text-slate-800';
+  const statusLabelClass = statusLabelMap[habit.status] || 'bg-amber-700 text-amber-100 border-amber-600';
 
   return (
     <Link href={`/habits/${habit.id}`}>
       <div
-        className={`group rounded-lg border p-4 shadow-sm transition-all hover:shadow-md ${statusColorClass}`}
+        className={`group rounded-xl border-2 bg-gradient-to-br p-5 shadow-md transition-all hover:shadow-xl hover:scale-105 ${statusColorClass}`}
       >
-        <p className="font-semibold text-slate-900 group-hover:text-slate-700">{habit.name}</p>
-        <div className="mt-3 flex items-center justify-between">
-          <span className={`inline-block rounded px-2 py-1 text-xs font-medium ${statusLabelClass}`}>
-            {habit.status}
+        <p className="font-bold text-amber-300 group-hover:text-amber-200">{habit.name}</p>
+        <div className="mt-4 flex items-center justify-between">
+          <span className={`inline-block rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider border-2 ${statusLabelMap[habit.status] || statusLabelClass}`}>
+            {habit.status === 'ACTIVE'
+              ? '🟢 Active'
+              : habit.status === 'PAUSED'
+                ? '⏸️ Paused'
+                : '🔒 Sealed'}
           </span>
-          {isCheckedIn && <span className="text-sm font-bold text-green-600">✓ Today</span>}
+          {isCheckedIn && <span className="text-lg font-bold text-green-300">✓ Victory</span>}
+        </div>
+        <div className="mt-3 flex gap-2">
+          <div className="flex-1 rounded-lg bg-black/20 px-2 py-2 text-center">
+            <p className="text-xs text-amber-300 font-semibold">Current</p>
+            <p className="text-lg font-bold text-amber-400">{habit.currentStreak}</p>
+          </div>
+          <div className="flex-1 rounded-lg bg-black/20 px-2 py-2 text-center">
+            <p className="text-xs text-amber-300 font-semibold">Best</p>
+            <p className="text-lg font-bold text-amber-400">{habit.bestStreak}</p>
+          </div>
         </div>
       </div>
     </Link>
