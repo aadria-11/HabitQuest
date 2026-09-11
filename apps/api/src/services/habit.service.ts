@@ -17,13 +17,18 @@ export async function createHabit(
     },
   });
 
+  const habitWithCount = {
+    ...habit,
+    checkInCount: 0,
+  } as Habit;
+
   const io = getSocketIO();
   if (io) {
-    const event: HabitCreatedEvent = { type: 'habit:created', data: habit };
+    const event: HabitCreatedEvent = { type: 'habit:created', data: habitWithCount };
     io.to(`user:${userId}`).emit('habit:created', event.data);
   }
 
-  return habit;
+  return habitWithCount;
 }
 
 export async function getHabits(
@@ -61,17 +66,41 @@ export async function getHabits(
       orderBy,
       skip: options.skip || 0,
       take: options.take || 10,
+      include: {
+        checkIns: {
+          select: { id: true },
+        },
+      },
     }),
     prisma.habit.count({ where }),
   ]);
 
-  return { habits, total };
+  const habitsWithCount = habits.map((habit) => ({
+    ...habit,
+    checkInCount: habit.checkIns.length,
+    checkIns: undefined,
+  })) as unknown as Habit[];
+
+  return { habits: habitsWithCount, total };
 }
 
 export async function getHabit(userId: string, habitId: string): Promise<Habit | null> {
-  return prisma.habit.findFirst({
+  const habit = await prisma.habit.findFirst({
     where: { id: habitId, userId },
+    include: {
+      checkIns: {
+        select: { id: true },
+      },
+    },
   });
+
+  if (!habit) return null;
+
+  return {
+    ...habit,
+    checkInCount: habit.checkIns.length,
+    checkIns: undefined,
+  } as unknown as Habit;
 }
 
 export async function updateHabit(
@@ -100,13 +129,18 @@ export async function updateHabit(
     data: updateData,
   });
 
+  const updatedWithCount = {
+    ...updated,
+    checkInCount: habit.checkInCount,
+  } as Habit;
+
   const io = getSocketIO();
   if (io) {
-    const event: HabitUpdatedEvent = { type: 'habit:updated', data: updated };
+    const event: HabitUpdatedEvent = { type: 'habit:updated', data: updatedWithCount };
     io.to(`user:${userId}`).emit('habit:updated', event.data);
   }
 
-  return updated;
+  return updatedWithCount;
 }
 
 export async function deleteHabit(userId: string, habitId: string): Promise<boolean> {

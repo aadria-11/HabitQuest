@@ -10,7 +10,7 @@ export default function CreateHabitPage() {
 
   async function handleSubmit(data: any) {
     await createHabit.mutateAsync(data);
-    router.push('/habits');
+    router.push('/dashboard');
   }
 
   return (

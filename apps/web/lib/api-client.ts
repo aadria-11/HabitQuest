@@ -23,12 +23,13 @@ export async function apiRequest<T>(
   }
 
   const session = await getSession();
-  const token = session?.user?.id; // Will be embedded in JWT by Auth.js
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
+    'x-user-id': session?.user?.id || '',
     ...fetchOptions.headers,
   };
+
 
   const response = await fetch(url, {
     ...fetchOptions,

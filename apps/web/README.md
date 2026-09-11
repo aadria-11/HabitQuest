@@ -40,9 +40,82 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ### subscribe
 
-Client → Server
+Direction: Client → Server
 
-```json
+Purpose:
+Subscribes the user to real-time milestone notifications.
+
+Payload:
+
 {
   "userId": "abc123"
 }
+
+Server Behavior:
+- Adds the socket to room user:abc123
+- Evaluates the user's habits for milestone achievements
+- Enables future milestone notifications to be sent to the user
+
+Example:
+
+socket.emit('subscribe', {
+  userId: session.user.id
+});
+
+### milestone
+
+Direction: Server → Client
+
+Purpose:
+Notifies the user when a habit reaches a milestone streak.
+
+Payload:
+
+{
+  "notificationId": "notif123",
+  "habitId": "habit456",
+  "habitName": "Exercise",
+  "milestone": 7
+}
+
+Server Behavior:
+- Sends a milestone notification to the connected user
+
+Example:
+
+socket.on('milestone', (data) => {
+  console.log(`${data.habitName} reached ${data.milestone} days`);
+});
+
+### milestone:ack
+
+Direction: Client → Server
+
+Purpose:
+Acknowledges that a milestone notification has been received and viewed.
+
+Payload:
+
+{
+  "notificationId": "notif123"
+}
+
+Server Behavior:
+- Marks the notification as acknowledged in the database
+
+Example:
+
+socket.emit('milestone:ack', {
+  notificationId: data.notificationId
+});
+
+### Real-Time Notification Flow
+
+1. Client connects to Socket.IO.
+2. Client sends a subscribe message containing its userId.
+3. Server joins the user-specific room.
+4. Server evaluates user milestones.
+5. Server sends a milestone notification when a milestone is reached.
+6. Client displays the notification.
+7. Client sends milestone:ack.
+8. Server updates the notification as acknowledged in the database.

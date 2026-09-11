@@ -68,7 +68,7 @@ FUNCTIONAL REQUIREMENTS
 
 Authentication
 
-- User signs in using Microsoft SSO
+- User signs in using Github and Google SSO
 - No local username/password accounts
 - User can log out
 - Protected routes require authentication
@@ -147,10 +147,7 @@ When a habit is checked in from Tab A:
 ================================================================================
 DATABASE MODEL
 ================================================================================
-
-User
-
-Fields
+User Fields
 
 - id
 - email
@@ -159,9 +156,7 @@ Fields
 - createdAt
 - updatedAt
 
-Habit
-
-Fields
+Habit Fields
 
 - id
 - userId
@@ -174,9 +169,7 @@ Fields
 - createdAt
 - updatedAt
 
-HabitCheckIn
-
-Fields
+HabitCheckIn Fields
 
 - id
 - habitId
@@ -184,10 +177,8 @@ Fields
 - createdAt
 
 Relationships
-
 User
   -> many Habits
-
 Habit
   -> many HabitCheckIns
 
@@ -225,21 +216,15 @@ WEBSOCKET EVENTS
 Client -> Server
 
 habit:subscribe
-
 habit:update
-
 habit:checkin
 
 Server -> Client
 
 habit:created
-
 habit:updated
-
 habit:deleted
-
 habit:checkedin
-
 streak:updated
 
 ================================================================================
@@ -258,10 +243,10 @@ General
 - Empty states
 
 Pages
-
 Login Page
 
-- Microsoft Sign In button
+- Google Sign In button
+- GitHub Sign In button
 
 Dashboard
 
@@ -275,7 +260,6 @@ Display:
 Habit List Page
 
 Features:
-
 - Search
 - Status filtering
 - Sorting
@@ -284,7 +268,6 @@ Features:
 Habit Details Page
 
 Display:
-
 - Name
 - Description
 - Start Date
@@ -296,16 +279,13 @@ Display:
 Create Habit Page
 
 Fields:
-
 - Name
 - Description
 - Start Date
 - Status
 
 Edit Habit Page
-
 Fields:
-
 - Name
 - Description
 - Start Date
@@ -316,7 +296,6 @@ SECURITY REQUIREMENTS
 ================================================================================
 
 Authentication
-
 - SSO only
 - No password storage
 - Protected API endpoints
@@ -324,14 +303,12 @@ Authentication
 Authorization
 
 All habit operations must verify:
-
 - User is authenticated
 - Habit belongs to authenticated user
 
 Example Rule
 
 WHERE habit.userId = currentUser.id
-
 Users must never access another user's records.
 
 ================================================================================
@@ -339,15 +316,12 @@ TIMEZONE STRATEGY
 ================================================================================
 
 Storage
-
 - Store timestamps in UTC
 
 Display
-
 - Display dates using user local timezone
 
 Streak Calculation
-
 - Calculate streaks based on user local date
 
 ================================================================================
@@ -357,12 +331,10 @@ TESTING REQUIREMENTS
 Frontend Tests
 
 Tools
-
 - Vitest
 - React Testing Library
 
 Coverage
-
 - Form validation
 - Dashboard rendering
 - Habit filtering
@@ -372,12 +344,10 @@ Coverage
 Backend Tests
 
 Tools
-
 - Vitest
 - Supertest
 
 Coverage
-
 - Habit CRUD
 - Check-in logic
 - Streak calculations
@@ -387,11 +357,9 @@ Coverage
 E2E Tests
 
 Tool
-
 - Playwright
 
 Scenarios
-
 - Login
 - Logout
 - Create Habit
@@ -408,19 +376,16 @@ NON-FUNCTIONAL REQUIREMENTS
 ================================================================================
 
 Performance
-
 - Dashboard load under 2 seconds
 - Optimistic UI updates where appropriate
 
 Maintainability
-
 - Clean architecture
 - TypeScript throughout
 - Modular components
 - Reusable services
 
 Reliability
-
 - Validation on frontend and backend
 - Error handling
 - Structured logging
@@ -458,7 +423,6 @@ DEFINITION OF DONE
 ================================================================================
 
 The application is considered complete when:
-
 - Users can authenticate via Microsoft SSO
 - Users can only view their own habits
 - Habit CRUD operations work

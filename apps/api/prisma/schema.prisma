@@ -43,6 +43,7 @@ model HabitCheckIn {
   id          String   @id @default(cuid())
   habitId     String
   checkInDate DateTime @db.Date
+  comment     String?
   createdAt   DateTime @default(now())
   habit       Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
 

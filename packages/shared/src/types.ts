@@ -18,6 +18,7 @@ export interface Habit {
   status: HabitStatus;
   currentStreak: number;
   bestStreak: number;
+  checkInCount: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,6 +27,7 @@ export interface HabitCheckIn {
   id: string;
   habitId: string;
   checkInDate: Date;
+  comment: string | null;
   createdAt: Date;
 }
 

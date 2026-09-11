@@ -14,21 +14,6 @@ export async function evaluateMilestones(
     },
   });
 
-  const notification =await prisma.milestoneNotification.create({
-        data: {
-        userId,
-        habitId: habit.id,
-        milestone,
-        },
-    });
-
-    socket.emit('milestone', {
-        notificationId: notification.id,
-        habitId: habit.id,
-        habitName: habit.name,
-        milestone,
-    });
-
   for (const habit of habits) {
     for (const milestone of MILESTONES) {
       if (habit.currentStreak !== milestone) {
@@ -49,19 +34,20 @@ export async function evaluateMilestones(
         continue;
       }
 
+      const notification =
+        await prisma.milestoneNotification.create({
+          data: {
+            userId,
+            habitId: habit.id,
+            milestone,
+          },
+        });
+
       socket.emit('milestone', {
         notificationId: notification.id,
         habitId: habit.id,
         habitName: habit.name,
         milestone,
-      });
-
-      await prisma.milestoneNotification.create({
-        data: {
-          userId,
-          habitId: habit.id,
-          milestone,
-        },
       });
     }
   }

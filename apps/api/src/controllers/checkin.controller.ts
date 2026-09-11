@@ -19,6 +19,7 @@ export async function createCheckIn(
       id,
       req.user.userId,
       parsed.data.checkInDate,
+      parsed.data.comment,
     );
 
     res.status(201).json(checkIn);

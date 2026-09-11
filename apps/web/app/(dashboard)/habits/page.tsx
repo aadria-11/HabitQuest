@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useHabits, useDeleteHabit } from '@/hooks';
 import { Button } from '@/components/ui/button';
+import { BestStreak } from '@/components/habits/BestStreak';
+import { TotalCheckIns } from '@/components/habits/TotalCheckIns';
 
 export default function HabitsPage() {
   const [search, setSearch] = useState('');
@@ -69,12 +71,21 @@ export default function HabitsPage() {
               <div className="flex-1">
                 <p className="font-medium text-slate-900">{habit.name}</p>
                 <p className="text-sm text-slate-600">{habit.description}</p>
-                <div className="mt-2 flex gap-4 text-sm">
-                  <span className="text-slate-600">Current: {habit.currentStreak}</span>
-                  <span className="text-slate-600">Best: {habit.bestStreak}</span>
+                <div className="mt-3 flex flex-wrap gap-3">
                   <span className="rounded bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
                     {habit.status}
                   </span>
+                  <div className="flex gap-3 text-xs">
+                    <span className="rounded bg-yellow-50 px-2 py-1 font-medium text-yellow-900">
+                      Current: {habit.currentStreak} 🔥
+                    </span>
+                    <span className="rounded bg-purple-50 px-2 py-1 font-medium text-purple-900">
+                      Best: {habit.bestStreak} ⭐
+                    </span>
+                    <span className="rounded bg-cyan-50 px-2 py-1 font-medium text-cyan-900">
+                      Checkins: {habit.checkInCount} 📊
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="flex gap-2">

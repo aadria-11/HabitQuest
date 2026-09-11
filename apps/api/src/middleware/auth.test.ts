@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { authMiddleware, extractToken } from './auth.js';
+import { devAuthMiddleware, extractToken } from './dev-auth.js';
 import { Request, Response, NextFunction } from 'express';
 
 describe('Auth Middleware', () => {
@@ -35,7 +35,7 @@ describe('Auth Middleware', () => {
 
     const next = vi.fn();
 
-    authMiddleware(req as any, res, next);
+    devAuthMiddleware(req as any, res, next);
 
     expect(res.status).toHaveBeenCalledWith(401);
     expect(next).not.toHaveBeenCalled();

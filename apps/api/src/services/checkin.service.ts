@@ -3,7 +3,7 @@ import { calculateStreaks, getHabitCheckIns } from './streak.service.js';
 import { StreakUpdatedEvent, HabitCheckedInEvent } from '@shared/types';
 import { getSocketIO } from '../sockets/index.js';
 
-export async function createCheckIn(habitId: string, userId: string, checkInDate: string) {
+export async function createCheckIn(habitId: string, userId: string, checkInDate: string, comment?: string) {
   // Verify habit belongs to user
   const habit = await prisma.habit.findFirst({
     where: { id: habitId, userId },
@@ -46,6 +46,7 @@ export async function createCheckIn(habitId: string, userId: string, checkInDate
       data: {
         habitId,
         checkInDate: date,
+        comment: comment || null,
       },
     });
 

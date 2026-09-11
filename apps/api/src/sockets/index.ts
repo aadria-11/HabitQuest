@@ -50,13 +50,13 @@ export function setupSocketIO(httpServer: HTTPServer): SocketIOServer {
     });
 
     socket.on('milestone:ack',async ({ notificationId }) => {
-        console.log('Milestone acknowledged:',notificationId);
-
-        await prisma.milestoneNotification.update({
-          where: {id: notificationId,},
-          data: {acknowledged: true,},
+      await prisma.milestoneNotification.update({
+        where: {id: notificationId,},
+        data: {acknowledged: true,},
         });
-      });
+
+        console.log('Notification acknowledged:',notificationId,);
+    });
 
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);

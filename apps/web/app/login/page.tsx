@@ -18,6 +18,18 @@ export default function LoginPage() {
             Sign in with GitHub
           </Button>
         </form>
+
+        <form
+          action={async () => {
+            'use server';
+            await signIn('google', { redirectTo: '/dashboard' });
+          }}
+        >
+          <Button type="submit" className="w-full" size="lg">
+            Sign in with Google
+          </Button>
+        </form>
+        
       </div>
     </div>
   );

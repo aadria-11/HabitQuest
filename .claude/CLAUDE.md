@@ -12,8 +12,6 @@ Build a responsive Habit Tracker web application that allows authenticated users
 
 The application supports multiple users and enforces strict user isolation.
 
-When architectural decisions are required, follow @ARCHITECTURE.md
-When implementation details are required, follow @TECH_SPEC.md
 ---
 
 # IMPORTANT RULES
@@ -25,7 +23,7 @@ Authentication is SSO-only.
 Use:
 
 - Auth.js
-- Microsoft Entra ID (Azure AD)
+- Google and GitHub
 
 Do NOT implement:
 
