@@ -4,8 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useHabits, useDeleteHabit } from '@/hooks';
 import { Button } from '@/components/ui/button';
-import { BestStreak } from '@/components/habits/BestStreak';
-import { TotalCheckIns } from '@/components/habits/TotalCheckIns';
 
 export default function HabitsPage() {
   const [search, setSearch] = useState('');
@@ -62,57 +60,99 @@ export default function HabitsPage() {
       {isLoading ? (
         <p className="text-slate-600">Loading...</p>
       ) : data?.data && data.data.length > 0 ? (
-        <div className="space-y-2">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {data.data.map((habit) => (
             <div
               key={habit.id}
-              className="flex items-center justify-between rounded-lg border border-slate-200 p-4"
+              className="group flex flex-col rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:shadow-md"
             >
-              <div className="flex-1">
-                <p className="font-medium text-slate-900">{habit.name}</p>
-                <p className="text-sm text-slate-600">{habit.description}</p>
-                <div className="mt-3 flex flex-wrap gap-3">
-                  <span className="rounded bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
+              {/* Header - Details Section */}
+              <div className="border-b border-slate-100 px-6 py-4">
+                <h3 className="mb-2 text-lg font-semibold text-slate-900">{habit.name}</h3>
+                <p className="text-sm text-slate-600 line-clamp-2">{habit.description}</p>
+              </div>
+
+              {/* Start Date Section */}
+              <div className="border-b border-slate-100 px-6 py-3 text-center">
+                <p className="text-xs font-medium uppercase tracking-wider text-slate-500 mb-1">
+                  Started
+                </p>
+                <p className="text-sm font-medium text-slate-900">
+                  {new Date(habit.startDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </p>
+              </div>
+
+              {/* Status & Streaks Section */}
+              <div className="px-6 py-4">
+                <div className="mb-4 flex justify-center">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${
+                      habit.status === 'ACTIVE'
+                        ? 'bg-green-100 text-green-700'
+                        : habit.status === 'PAUSED'
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : 'bg-slate-100 text-slate-700'
+                    }`}
+                  >
                     {habit.status}
                   </span>
-                  <div className="flex gap-3 text-xs">
-                    <span className="rounded bg-yellow-50 px-2 py-1 font-medium text-yellow-900">
-                      Current: {habit.currentStreak} 🔥
-                    </span>
-                    <span className="rounded bg-purple-50 px-2 py-1 font-medium text-purple-900">
-                      Best: {habit.bestStreak} ⭐
-                    </span>
-                    <span className="rounded bg-cyan-50 px-2 py-1 font-medium text-cyan-900">
-                      Checkins: {habit.checkInCount} 📊
-                    </span>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="rounded-lg bg-yellow-50 px-3 py-3 text-center">
+                    <p className="text-2xl font-bold text-yellow-900">{habit.currentStreak}</p>
+                    <p className="text-xs font-medium text-yellow-700 mt-1">🔥 Current</p>
+                  </div>
+                  <div className="rounded-lg bg-purple-50 px-3 py-3 text-center">
+                    <p className="text-2xl font-bold text-purple-900">{habit.bestStreak}</p>
+                    <p className="text-xs font-medium text-purple-700 mt-1">⭐ Best</p>
+                  </div>
+                  <div className="rounded-lg bg-cyan-50 px-3 py-3 text-center">
+                    <p className="text-2xl font-bold text-cyan-900">{habit.checkInCount}</p>
+                    <p className="text-xs font-medium text-cyan-700 mt-1">📊 Total</p>
                   </div>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <Link href={`/habits/${habit.id}`}>
-                  <Button variant="secondary" size="sm">
+
+              {/* Actions Section */}
+              <div className="border-t border-slate-100 px-6 py-4 flex flex-col gap-2">
+                <Link href={`/habits/${habit.id}`} className="w-full">
+                  <Button variant="secondary" size="sm" className="w-full">
                     View
                   </Button>
                 </Link>
-                {habit.status === 'ARCHIVED' ? (
-                  <Button variant="outline" size="sm" disabled title="Archived habits are read-only">
-                    Edit
-                  </Button>
-                ) : (
-                  <Link href={`/habits/${habit.id}/edit`}>
-                    <Button variant="outline" size="sm">
+                <div className="flex gap-2">
+                  {habit.status === 'ARCHIVED' ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled
+                      title="Archived habits are read-only"
+                      className="flex-1"
+                    >
                       Edit
                     </Button>
-                  </Link>
-                )}
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDelete(habit.id)}
-                  disabled={deleteHabit.isPending}
-                >
-                  Delete
-                </Button>
+                  ) : (
+                    <Link href={`/habits/${habit.id}/edit`} className="flex-1">
+                      <Button variant="outline" size="sm" className="w-full">
+                        Edit
+                      </Button>
+                    </Link>
+                  )}
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleDelete(habit.id)}
+                    disabled={deleteHabit.isPending}
+                    className="flex-1"
+                  >
+                    Delete
+                  </Button>
+                </div>
               </div>
             </div>
           ))}

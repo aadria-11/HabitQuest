@@ -7,10 +7,6 @@ import { useCheckIn } from '@/hooks/useCheckIn';
 import { useCheckIns } from '@/hooks/useCheckIns';
 import { useCancelCheckIn } from '@/hooks/useCancelCheckIn';
 import { useDeleteHabit } from '@/hooks';
-import { StreakBadge } from '@/components/habits/StreakBadge';
-import { BestStreak } from '@/components/habits/BestStreak';
-import { TotalCheckIns } from '@/components/habits/TotalCheckIns';
-import { Dialog } from '@/components/ui/dialog';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
@@ -112,19 +108,74 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-4">
-        <StreakBadge current={habit.currentStreak} />
-        <BestStreak best={habit.bestStreak} />
-        <TotalCheckIns count={habit.checkInCount} />
+      {/* Info Cards Grid */}
+      <div className="grid gap-4 md:grid-cols-3">
+        {/* Details Card */}
+        <div className="rounded-xl border border-slate-200 bg-white p-6">
+          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">
+            About
+          </h3>
+          <p className="text-slate-700">{habit.description}</p>
+        </div>
+
+        {/* Start Date Card */}
+        <div className="rounded-xl border border-slate-200 bg-white p-6">
+          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">
+            Started
+          </h3>
+          <p className="text-2xl font-bold text-slate-900">
+            {new Date(habit.startDate).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            })}
+          </p>
+          <p className="mt-2 text-xs text-slate-500">
+            {Math.floor(
+              (new Date().getTime() - new Date(habit.startDate).getTime()) / (1000 * 60 * 60 * 24)
+            )}{' '}
+            days ago
+          </p>
+        </div>
+
+        {/* Status Card */}
+        <div className="rounded-xl border border-slate-200 bg-white p-6">
+          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">
+            Status
+          </h3>
+          <div className="flex items-center justify-center">
+            <span
+              className={`rounded-full px-4 py-2 text-sm font-semibold uppercase tracking-wider ${
+                habit.status === 'ACTIVE'
+                  ? 'bg-green-100 text-green-700'
+                  : habit.status === 'PAUSED'
+                    ? 'bg-yellow-100 text-yellow-700'
+                    : 'bg-slate-100 text-slate-700'
+              }`}
+            >
+              {habit.status}
+            </span>
+          </div>
+        </div>
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="mb-4 text-lg font-semibold text-slate-900">Details</h2>
-        <p className="text-slate-600">{habit.description}</p>
-        <p className="mt-4 text-sm text-slate-600">
-          Started: {new Date(habit.startDate).toLocaleDateString()}
-        </p>
-        <p className="mt-2 text-sm text-slate-600">Status: {habit.status}</p>
+      {/* Streaks Stats */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-6 text-center">
+          <p className="text-4xl font-bold text-yellow-900">{habit.currentStreak}</p>
+          <p className="mt-2 text-sm font-medium text-yellow-700">🔥 Current Streak</p>
+          <p className="mt-1 text-xs text-yellow-600">consecutive days</p>
+        </div>
+        <div className="rounded-xl border border-purple-200 bg-purple-50 p-6 text-center">
+          <p className="text-4xl font-bold text-purple-900">{habit.bestStreak}</p>
+          <p className="mt-2 text-sm font-medium text-purple-700">⭐ Best Streak</p>
+          <p className="mt-1 text-xs text-purple-600">personal record</p>
+        </div>
+        <div className="rounded-xl border border-cyan-200 bg-cyan-50 p-6 text-center">
+          <p className="text-4xl font-bold text-cyan-900">{habit.checkInCount}</p>
+          <p className="mt-2 text-sm font-medium text-cyan-700">📊 Total Check-Ins</p>
+          <p className="mt-1 text-xs text-cyan-600">all time</p>
+        </div>
       </div>
 
       {canCheckIn ? (

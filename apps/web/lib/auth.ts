@@ -40,6 +40,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }),
         });
 
+
         if (!syncResponse.ok) {
           throw new Error('Failed to sync user');
         }
