@@ -35,7 +35,7 @@ export interface HabitCheckIn {
 
 export interface JWTPayload {
   userId: string;
-  email: string;
+  email: string | null;
   name: string | null;
 }
 
