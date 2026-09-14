@@ -278,3 +278,4 @@ npm run lint
 - API rate limiting
 - Full E2E test suite
 - Performance optimizations (caching, pagination)
+
