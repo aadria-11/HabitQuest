@@ -47,7 +47,8 @@ Database
 Authentication
 --------------
 - Auth.js
-- Microsoft Entra ID (Azure AD) SSO
+- Google OIDC
+- GitHub OAuth
 
 Testing
 -------
@@ -423,7 +424,7 @@ DEFINITION OF DONE
 ================================================================================
 
 The application is considered complete when:
-- Users can authenticate via Microsoft SSO
+- Users can authenticate via Google OIDC or GitHub OAuth
 - Users can only view their own habits
 - Habit CRUD operations work
 - Status management works

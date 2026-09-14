@@ -16,6 +16,11 @@ export default function DashboardPage() {
   const [completionFilter, setCompletionFilter] = useState<CompletionFilter>(null);
   const [search, setSearch] = useState('');
   const [checkedInHabits, setCheckedInHabits] = useState<Set<string>>(new Set());
+  const [formattedDate, setFormattedDate] = useState('');
+
+  useEffect(() => {
+    setFormattedDate(new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }));
+  }, []);
 
   const habits = data?.data || [];
 
@@ -119,7 +124,7 @@ export default function DashboardPage() {
             &quot;All we have to decide is what quests to undertake and when to undertake them.&quot; - Gandalf the Grey
           </p>
           <p className="text-amber-300 text-xs mt-2 font-semibold tracking-widest">
-            Your daily quests await... {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+            Your daily quests await... {formattedDate}
           </p>
         </div>
       </div>

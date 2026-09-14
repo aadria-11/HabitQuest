@@ -1,4 +1,5 @@
 import NextAuth from 'next-auth';
+import Google from 'next-auth/providers/google';
 import GitHub from 'next-auth/providers/github';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -7,14 +8,10 @@ const AUTH_SECRET = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || ''
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
-    {
-      id: 'google',
-      name: 'Google',
-      type: 'oidc',
-      issuer: 'https://accounts.google.com',
+    Google({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-    },
+    }),
     GitHub({
       clientId: process.env.GITHUB_CLIENT_ID || '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
