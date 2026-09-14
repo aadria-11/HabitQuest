@@ -143,7 +143,7 @@ When a check-in happens:
 ## Key Files
 
 **Frontend:**
-- `app/lib/auth.ts` — Auth.js config, Entra ID provider
+- `app/lib/auth.ts` — Auth.js config (Google & GitHub providers)
 - `app/lib/api-client.ts` — Typed fetch wrapper with credential handling
 - `app/lib/socket.ts` — Socket.IO client singleton
 - `app/hooks/` — React Query hooks (useHabits, useCreateHabit, useCheckIn, etc.)
@@ -255,7 +255,7 @@ npm run lint
 
 ## Definition of Done
 
-✅ Users authenticate via Microsoft SSO  
+✅ Users authenticate via Google and GitHub OAuth  
 ✅ Users only see their own habits  
 ✅ Habit CRUD operations work  
 ✅ Daily check-ins with one-per-day rule (409 on duplicate)  

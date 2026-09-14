@@ -9,7 +9,7 @@
 ## Project Scope
 
 Build a multi-user habit tracking web application with:
-- SSO authentication (Microsoft Entra ID via Auth.js)
+- SSO authentication (Google and GitHub OAuth via Auth.js)
 - Habit CRUD operations with user isolation
 - Daily check-ins with streak tracking (current & best)
 - Real-time WebSocket synchronization across browser tabs
@@ -31,11 +31,11 @@ Build a multi-user habit tracking web application with:
 - Prisma client singleton
 
 ✅ **Frontend Auth:**
-- Auth.js with Microsoft Entra ID provider
+- Auth.js with Google and GitHub OAuth providers
 - basePath `/auth` for literal endpoints (per TECH_SPEC)
 - JWT callback: calls Express `/internal/users/sync` to upsert user
 - Route middleware: guards `/dashboard` and `/habits/*`, redirects to `/login`
-- Login page with Microsoft sign-in button
+- Login page with Google and GitHub sign-in buttons
 
 ✅ **Backend Auth:**
 - JWT middleware: verifies Auth.js cookie, extracts userId
@@ -121,7 +121,7 @@ Build a multi-user habit tracking web application with:
 
 | Requirement | Status | Notes |
 |---|---|---|
-| SSO-only auth (no passwords) | ✅ | Microsoft Entra ID via Auth.js |
+| SSO-only auth (no passwords) | ✅ | Google and GitHub OAuth via Auth.js |
 | Every habit query scoped by userId | ✅ | Service-layer enforcement |
 | User isolation (404 on cross-user access) | ✅ | All REST endpoints protected |
 | Habit CRUD operations | ✅ | Full CRUD + list with filters |
@@ -153,7 +153,7 @@ PostgreSQL (Users, Habits, HabitCheckIns)
 
 ### Authentication Flow
 
-1. User signs in via Microsoft Entra ID
+1. User signs in via Google or GitHub OAuth
 2. Auth.js jwt callback calls `POST /internal/users/sync` (secret-protected)
 3. Receives internal `userId` from Prisma
 4. JWT embeds `{ userId, email, name }`
@@ -190,7 +190,7 @@ Tab B Updates Live (No Reload)
 
 | Path | Purpose |
 |---|---|
-| `apps/web/app/lib/auth.ts` | Auth.js config + Entra ID provider |
+| `apps/web/app/lib/auth.ts` | Auth.js config (Google & GitHub OAuth providers) |
 | `apps/web/app/middleware.ts` | Route protection (redirects to /login) |
 | `apps/api/src/middleware/auth.ts` | JWT verification (REST + WS) |
 | `apps/api/src/services/habit.service.ts` | Habit business logic + WS emissions |
@@ -250,7 +250,7 @@ Tab B Updates Live (No Reload)
 
 ## Known Limitations
 
-1. **E2E Tests Not Run:** Test-only auth bypass needed to seed sessions without interactive Microsoft login; Playwright tests are written but not executed in CI
+1. **E2E Tests Not Run:** Test-only auth bypass needed to seed sessions without interactive OAuth login; Playwright tests are written but not executed in CI
 2. **No Notifications:** Habit reminders/notifications not implemented
 3. **No Caching Headers:** HTTP caching not optimized
 4. **No Rate Limiting:** API endpoints not rate-limited
