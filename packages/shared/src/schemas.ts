@@ -16,6 +16,15 @@ export const CheckInSchema = z.object({
   comment: z.string().max(500).optional().nullable(),
 });
 
+export const SyncUserSchema = z.object({
+  provider: z.string().min(1),
+  providerAccountId: z.string().min(1),
+  email: z.string().email().optional().nullable(),
+  name: z.string().optional().nullable(),
+  image: z.string().url().optional().nullable(),
+});
+
 export type CreateHabit = z.infer<typeof CreateHabitSchema>;
 export type UpdateHabit = z.infer<typeof UpdateHabitSchema>;
 export type CheckIn = z.infer<typeof CheckInSchema>;
+export type SyncUser = z.infer<typeof SyncUserSchema>;

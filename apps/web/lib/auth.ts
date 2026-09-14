@@ -34,6 +34,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             'x-internal-secret': INTERNAL_SECRET,
           },
           body: JSON.stringify({
+            provider: account.provider,
+            providerAccountId: account.providerAccountId,
             email: user.email,
             name: user.name,
             image: user.image,

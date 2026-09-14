@@ -1,6 +1,8 @@
 export interface User {
   id: string;
-  email: string;
+  provider: string;
+  providerAccountId: string;
+  email: string | null;
   name: string | null;
   image: string | null;
   createdAt: Date;
