@@ -13,7 +13,7 @@ export async function createHabit(
       name: data.name,
       description: data.description,
       startDate: new Date(data.startDate),
-      status: (data.status as any) || 'ACTIVE',
+      status: data.status || 'ACTIVE',
     },
   });
 

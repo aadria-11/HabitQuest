@@ -60,7 +60,6 @@ export async function createHabit(
   req: Request & AuthenticatedRequest,
   res: Response,
 ) {
-  console.log('REQ USER:', req.user);
   try {
     const parsed = CreateHabitSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -93,8 +92,8 @@ export async function updateHabit(
     }
 
     res.json(habit);
-  } catch (error: any) {
-    if (error.code === 'HABIT_ARCHIVED') {
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'HABIT_ARCHIVED') {
       return res.status(403).json({ error: 'Archived habits are read-only and cannot be edited' });
     }
 
