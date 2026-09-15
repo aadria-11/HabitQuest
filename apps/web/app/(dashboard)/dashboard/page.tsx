@@ -111,16 +111,16 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8">
+    <div className="mx-auto max-w-7xl space-y-4 sm:space-y-8 px-3 sm:px-4 py-4 sm:py-8">
       {/* Welcome Header - Lord of the Rings Theme */}
-      <div className="bg-gradient-to-r from-amber-900 via-amber-800 to-green-900 rounded-2xl p-8 border-2 border-amber-700 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-amber-900 via-amber-800 to-green-900 rounded-2xl p-4 sm:p-8 border-2 border-amber-700 relative overflow-hidden">
         {/* Decorative background pattern */}
         <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(circle, #d4af37 1px, transparent 1px)', backgroundSize: '20px 20px'}}></div>
         <div className="relative">
-          <h1 className="text-3xl font-bold text-amber-300 mb-2" style={{fontFamily: 'Georgia, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.5)', letterSpacing: '0.05em'}}>
+          <h1 className="text-xl sm:text-3xl font-bold text-amber-300 mb-2" style={{fontFamily: 'Georgia, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.5)', letterSpacing: '0.05em'}}>
             ⚔️ Welcome, Brave Adventurer
           </h1>
-          <p className="text-amber-200 text-sm italic font-medium">
+          <p className="text-amber-200 text-xs sm:text-sm italic font-medium">
             &quot;All we have to decide is what quests to undertake and when to undertake them.&quot; - Gandalf the Grey
           </p>
           <p className="text-amber-300 text-xs mt-2 font-semibold tracking-widest">
@@ -130,7 +130,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Search & Create */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <input
           type="text"
           placeholder="Search your quests..."
@@ -138,14 +138,14 @@ export default function DashboardPage() {
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1 rounded-lg border-2 border-amber-700 bg-amber-50 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-600 transition-all text-slate-900 placeholder-slate-500"
         />
-        <Link href="/habits/new">
-          <Button className="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold border-2 border-amber-500">
+        <Link href="/habits/new" className="w-full sm:w-auto">
+          <Button className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold border-2 border-amber-500">
             ⚔️ New Quest
           </Button>
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-1 gap-2 xs:grid-cols-2 sm:gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <StatTile
           label="All Habits"
           value={allCount}
@@ -191,32 +191,34 @@ export default function DashboardPage() {
       </div>
 
       <div>
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <span className="text-3xl">📜</span>
             <h2 className="text-2xl font-bold text-amber-900" style={{fontFamily: 'Georgia, serif', textShadow: '1px 1px 2px rgba(0,0,0,0.1)'}}>{getFilterLabel()}</h2>
           </div>
           {(activeFilter === 'ACTIVE' || activeFilter === 'ALL') && (
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
               <button
                 onClick={() => setCompletionFilter(completionFilter === 'COMPLETED_TODAY' ? null : 'COMPLETED_TODAY')}
-                className={`rounded-lg px-4 py-2 text-sm font-bold transition-all border-2 uppercase tracking-wider ${
+                className={`rounded-lg px-2 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold transition-all border-2 uppercase tracking-wider ${
                   completionFilter === 'COMPLETED_TODAY'
                     ? 'bg-gradient-to-r from-emerald-700 to-emerald-800 text-amber-50 border-emerald-600 shadow-lg ring-2 ring-amber-400'
                     : 'bg-gradient-to-r from-amber-900 to-amber-950 text-amber-200 border-amber-700 hover:from-amber-800 hover:to-amber-900'
                 }`}
               >
-                ✓ Completed Quest
+                <span className="hidden sm:inline">✓ Completed Quest</span>
+                <span className="sm:hidden">✓ Completed</span>
               </button>
               <button
                 onClick={() => setCompletionFilter(completionFilter === 'NOT_COMPLETED_TODAY' ? null : 'NOT_COMPLETED_TODAY')}
-                className={`rounded-lg px-4 py-2 text-sm font-bold transition-all border-2 uppercase tracking-wider ${
+                className={`rounded-lg px-2 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold transition-all border-2 uppercase tracking-wider ${
                   completionFilter === 'NOT_COMPLETED_TODAY'
                     ? 'bg-gradient-to-r from-amber-900 to-amber-950 text-amber-50 border-amber-600 shadow-lg ring-2 ring-amber-400'
                     : 'bg-gradient-to-r from-amber-900 to-amber-950 text-amber-200 border-amber-700 hover:from-amber-800 hover:to-amber-900'
                 }`}
               >
-                ⊘ Unfinished Quest
+                <span className="hidden sm:inline">⊘ Unfinished Quest</span>
+                <span className="sm:hidden">⊘ Unfinished</span>
               </button>
             </div>
           )}
@@ -224,7 +226,7 @@ export default function DashboardPage() {
         {isLoading ? (
           <p className="text-slate-600">Loading...</p>
         ) : filteredHabits.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
             {filteredHabits.map((habit) => (
               <HabitCardWithCheckIn
                 key={habit.id}
@@ -267,12 +269,12 @@ function StatTile({
   return (
     <button
       onClick={onClick}
-      className={`rounded-xl border-2 p-5 text-left transition-all hover:shadow-lg ${colorClass} ${
+      className={`rounded-xl border-2 p-3 sm:p-5 text-left transition-all hover:shadow-lg ${colorClass} ${
         isActive ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-amber-950 shadow-xl' : 'shadow-md'
       }`}
     >
       <p className="text-xs font-bold text-amber-300 uppercase tracking-widest">{label}</p>
-      <p className="mt-3 text-3xl font-bold text-amber-400">{value}</p>
+      <p className="mt-2 sm:mt-3 text-2xl sm:text-3xl font-bold text-amber-400">{value}</p>
     </button>
   );
 }
@@ -355,27 +357,27 @@ function HabitCardWithCheckIn({ habit, onCheckInStatusChange }: HabitCardWithChe
   return (
     <Link href={`/habits/${habit.id}`}>
       <div
-        className={`group rounded-xl border-2 bg-gradient-to-br p-5 shadow-md transition-all hover:shadow-xl hover:scale-105 ${statusColorClass}`}
+        className={`group rounded-xl border-2 bg-gradient-to-br p-4 shadow-md transition-all hover:shadow-xl hover:scale-105 ${statusColorClass}`}
       >
-        <p className="font-bold text-amber-300 group-hover:text-amber-200">{habit.name}</p>
-        <div className="mt-4 flex items-center justify-between">
-          <span className={`inline-block rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider border-2 ${statusLabelMap[habit.status] || statusLabelClass}`}>
+        <p className="text-sm sm:text-base font-bold text-amber-300 group-hover:text-amber-200 line-clamp-2">{habit.name}</p>
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <span className={`inline-block rounded-lg px-2 py-1 sm:px-3 sm:py-1.5 text-xs font-bold uppercase tracking-wider border-2 ${statusLabelMap[habit.status] || statusLabelClass}`}>
             {habit.status === 'ACTIVE'
               ? '🟢 Active'
               : habit.status === 'PAUSED'
                 ? '⏸️ Paused'
                 : '🔒 Sealed'}
           </span>
-          {isCheckedIn && <span className="text-lg font-bold text-green-300">✓ Victory</span>}
+          {isCheckedIn && <span className="text-base sm:text-lg font-bold text-green-300">✓</span>}
         </div>
-        <div className="mt-3 flex gap-2">
-          <div className="flex-1 rounded-lg bg-black/20 px-2 py-2 text-center">
+        <div className="mt-2 flex gap-2">
+          <div className="flex-1 rounded-lg bg-black/20 px-2 py-1.5 text-center">
             <p className="text-xs text-amber-300 font-semibold">Current</p>
-            <p className="text-lg font-bold text-amber-400">{habit.currentStreak}</p>
+            <p className="text-base sm:text-lg font-bold text-amber-400">{habit.currentStreak}</p>
           </div>
-          <div className="flex-1 rounded-lg bg-black/20 px-2 py-2 text-center">
+          <div className="flex-1 rounded-lg bg-black/20 px-2 py-1.5 text-center">
             <p className="text-xs text-amber-300 font-semibold">Best</p>
-            <p className="text-lg font-bold text-amber-400">{habit.bestStreak}</p>
+            <p className="text-base sm:text-lg font-bold text-amber-400">{habit.bestStreak}</p>
           </div>
         </div>
       </div>
