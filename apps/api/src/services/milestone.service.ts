@@ -1,11 +1,11 @@
 import { prisma } from '../lib/prisma.js';
-import { Socket } from 'socket.io';
+import { Server as SocketIOServer } from 'socket.io';
 
 const MILESTONES = [3, 7, 30];
 
 export async function evaluateMilestones(
   userId: string,
-  socket: Socket,
+  io: SocketIOServer,
 ) {
   const habits = await prisma.habit.findMany({
     where: {
@@ -43,7 +43,7 @@ export async function evaluateMilestones(
           },
         });
 
-      socket.emit('milestone', {
+      io.to(`user:${userId}`).emit('milestone', {
         notificationId: notification.id,
         habitId: habit.id,
         habitName: habit.name,

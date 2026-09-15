@@ -58,3 +58,8 @@ export function internalAuthMiddleware(
 
   next();
 }
+
+export function hasValidSessionCookie(cookieHeader: string | undefined): boolean {
+  if (!cookieHeader) return false;
+  return cookieHeader.includes('authjs.session-token=') || cookieHeader.includes('__Secure-authjs.session-token=');
+}

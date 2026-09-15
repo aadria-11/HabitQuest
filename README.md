@@ -197,18 +197,24 @@ This was a deliberate choice: since archiving is permanent, requiring archival b
 
 ## WebSocket Events
 
+**Authentication:**
+- The WebSocket connection is authenticated via the Auth.js session cookie (automatically sent by the browser).
+- Unauthenticated handshakes are rejected; the connection receives a `connect_error`.
+
 **Client → Server:**
-- `subscribe` — Join user's per-user room (payload: `{ userId }`)
-- `milestone:ack` — Acknowledge milestone notification (payload: `{ notificationId }`)
+- `subscribe` — Join user's per-user room (payload: `{}` — server derives `userId` from the verified session cookie)
+- `milestone:ack` — Acknowledge milestone notification (payload: `{ notificationId }`, ownership verified server-side)
 
 **Server → Client:**
-- `milestone` — Milestone reached (payload: `{ notificationId, habitId, habitName, milestone }`)
+- `milestone` — Milestone reached (payload: `{ notificationId, habitId, habitName, milestone }`, broadcast to all of user's connected sessions)
 
 **Milestone Notification Rules:**
 - Triggers when `currentStreak` reaches 3, 7, or 30 days
 - Only sent once per habit per milestone (deduplicated by `habitId_milestone` unique constraint)
 - Only for habits with status `ACTIVE`
-- Acknowledged via `milestone:ack` event; client updates `acknowledged: true` in DB
+- Evaluated when the WebSocket connection opens (on `subscribe`)
+- Acknowledged via `milestone:ack` event; server verifies ownership and updates `acknowledged: true` in DB
+- Notifications broadcast to all of a user's open sessions in the `user:<userId>` room, not just the subscribing socket
 
 ## Testing
 
