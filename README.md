@@ -77,7 +77,7 @@ habit-quest/
    # - AUTH_SECRET (min 32 chars, random)
    # - GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (from Google Cloud Console)
    # - GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET (from GitHub Settings)
-   # - API_INTERNAL_SECRET (min 32 chars, random)
+   # - INTERNAL_SECRET (min 32 chars, random)
    ```
 
 3. **Start PostgreSQL:**
@@ -254,9 +254,9 @@ npm run lint
 
 ## Development Notes
 
-- **Timezone:** Check-in dates stored as UTC; UI displays and accepts dates in user's local timezone. Streak calculations work across midnight in the user's local timezone.
-- **Streaks:** Calculated from check-in history. Current streak is broken if both today (in user's local timezone) and yesterday are missing check-ins. Best streak is the highest consecutive days ever achieved.
-- **Validation:** Frontend (Zod schemas) + backend (Zod validation middleware) + DB constraints
+- **Timezone:** Check-in dates and streak boundaries are calculated in UTC calendar days. No per-user timezone is stored. The UI is responsible for converting between UTC and the user's local timezone for display and input.
+- **Streaks:** Calculated from check-in history. Current streak is broken if both today (in UTC) and yesterday are missing check-ins. Best streak is the highest consecutive days ever achieved.
+- **Validation:** Frontend (Zod schemas) + backend (Zod validation schemas) + DB constraints
 - **CORS:** Enabled on API for frontend origin with `credentials: true` (cookies carry JWT)
 
 ## Definition of Done

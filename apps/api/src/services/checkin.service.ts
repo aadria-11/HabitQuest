@@ -1,6 +1,5 @@
 import { prisma } from '../lib/prisma.js';
-import { calculateStreaks, getHabitCheckIns } from './streak.service.js';
-import { StreakUpdatedEvent, HabitCheckedInEvent } from '@shared/types';
+import { calculateStreaks } from './streak.service.js';
 import { getSocketIO } from '../sockets/index.js';
 
 export async function createCheckIn(habitId: string, userId: string, checkInDate: string, comment?: string) {

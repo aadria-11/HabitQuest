@@ -13,15 +13,15 @@ export function calculateStreaks(dates: Date[]): { currentStreak: number; bestSt
   const dayMs = 24 * 60 * 60 * 1000;
 
   // Check if today or yesterday was checked in (current streak)
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const now = new Date();
+  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   const todayTime = today.getTime();
   const latestCheckIn = new Date(sorted[0]);
-  latestCheckIn.setHours(0, 0, 0, 0);
+  const latestCheckInUTC = new Date(Date.UTC(latestCheckIn.getUTCFullYear(), latestCheckIn.getUTCMonth(), latestCheckIn.getUTCDate()));
 
   if (
-    latestCheckIn.getTime() === todayTime ||
-    latestCheckIn.getTime() === todayTime - dayMs
+    latestCheckInUTC.getTime() === todayTime ||
+    latestCheckInUTC.getTime() === todayTime - dayMs
   ) {
     currentStreak = 1;
 
@@ -29,10 +29,10 @@ export function calculateStreaks(dates: Date[]): { currentStreak: number; bestSt
     for (let i = 1; i < sorted.length; i++) {
       const current = new Date(sorted[i - 1]);
       const next = new Date(sorted[i]);
-      current.setHours(0, 0, 0, 0);
-      next.setHours(0, 0, 0, 0);
+      const currentUTC = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth(), current.getUTCDate()));
+      const nextUTC = new Date(Date.UTC(next.getUTCFullYear(), next.getUTCMonth(), next.getUTCDate()));
 
-      if (current.getTime() - next.getTime() === dayMs) {
+      if (currentUTC.getTime() - nextUTC.getTime() === dayMs) {
         currentStreak++;
       } else {
         break;
@@ -44,10 +44,10 @@ export function calculateStreaks(dates: Date[]): { currentStreak: number; bestSt
   for (let i = 1; i < sorted.length; i++) {
     const current = new Date(sorted[i - 1]);
     const next = new Date(sorted[i]);
-    current.setHours(0, 0, 0, 0);
-    next.setHours(0, 0, 0, 0);
+    const currentUTC = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth(), current.getUTCDate()));
+    const nextUTC = new Date(Date.UTC(next.getUTCFullYear(), next.getUTCMonth(), next.getUTCDate()));
 
-    if (current.getTime() - next.getTime() === dayMs) {
+    if (currentUTC.getTime() - nextUTC.getTime() === dayMs) {
       tempStreak++;
     } else {
       bestStreak = Math.max(bestStreak, tempStreak);

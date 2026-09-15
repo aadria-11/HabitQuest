@@ -8,13 +8,13 @@ import { useSession } from 'next-auth/react';
 
 export function useHabitSocket(addToast?: (title: string, message: string) => void) {
   const queryClient = useQueryClient();
-  const socket = initSocket();
   const { data: session } = useSession();
 
   useEffect(() => {
-    if (!session?.user?.id) return;
+    if (!session?.user?.id || !session?.apiToken) return;
 
-    socket.emit('subscribe', { userId: session.user.id });
+    const socket = initSocket(session.apiToken);
+    socket.emit('subscribe');
 
     socket.on('habit:created', (habit: Habit) => {
       queryClient.invalidateQueries({ queryKey: ['habits'] });
@@ -66,5 +66,5 @@ export function useHabitSocket(addToast?: (title: string, message: string) => vo
       socket.off('streak:updated');
       socket.off('milestone');
     };
-  }, [socket, queryClient, session, addToast]);
+  }, [queryClient, session, addToast]);
 }

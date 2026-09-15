@@ -26,7 +26,7 @@ export async function apiRequest<T>(
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
-    'x-user-id': session?.user?.id || '',
+    ...(session?.apiToken && { 'Authorization': `Bearer ${session.apiToken}` }),
     ...fetchOptions.headers,
   };
 

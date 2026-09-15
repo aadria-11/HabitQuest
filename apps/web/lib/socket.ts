@@ -5,11 +5,20 @@ import { io, Socket } from 'socket.io-client';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 let socket: Socket | null = null;
+let currentToken: string | null = null;
 
-export function initSocket(): Socket {
-  if (socket) return socket;
+export function initSocket(token: string): Socket {
+  if (socket && currentToken === token) {
+    return socket;
+  }
 
+  if (socket) {
+    socket.disconnect();
+  }
+
+  currentToken = token;
   socket = io(API_URL, {
+    auth: { token },
     withCredentials: true,
     reconnection: true,
     reconnectionDelay: 1000,

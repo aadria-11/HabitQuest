@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { devAuthMiddleware } from '../middleware/dev-auth.js';
+import { authMiddleware } from '../middleware/auth.js';
 import * as habitController from '../controllers/habit.controller.js';
 
 const router = Router();
 
-router.use(devAuthMiddleware);
+router.use(authMiddleware);
 
 router.get('/', habitController.listHabits);
 router.post('/', habitController.createHabit);

@@ -24,7 +24,17 @@ export const SyncUserSchema = z.object({
   image: z.string().url().optional().nullable(),
 });
 
+export const HabitListQuerySchema = z.object({
+  search: z.string().max(255).optional(),
+  status: HabitStatusSchema.optional(),
+  sortBy: z.enum(['createdAt', 'name']).default('createdAt'),
+  sortDir: z.enum(['asc', 'desc']).default('desc'),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(10),
+});
+
 export type CreateHabit = z.infer<typeof CreateHabitSchema>;
 export type UpdateHabit = z.infer<typeof UpdateHabitSchema>;
 export type CheckIn = z.infer<typeof CheckInSchema>;
 export type SyncUser = z.infer<typeof SyncUserSchema>;
+export type HabitListQuery = z.infer<typeof HabitListQuerySchema>;

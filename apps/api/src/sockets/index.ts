@@ -1,6 +1,8 @@
 import { Server as HTTPServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
-import { hasValidSessionCookie } from '../middleware/auth.js';
+import jwt from 'jsonwebtoken';
+import { getEnv } from '../config/env.js';
+import { JWTPayload } from '@shared/types';
 import { evaluateMilestones } from '../services/milestone.service.js';
 import { prisma } from '../lib/prisma.js';
 
@@ -13,22 +15,28 @@ export function setupSocketIO(httpServer: HTTPServer): SocketIOServer {
   });
 
   io.use((socket, next) => {
-    const cookieHeader = socket.handshake.headers.cookie;
-
-    if (!hasValidSessionCookie(cookieHeader)) {
+    const token = socket.handshake.auth?.token;
+    if (!token) {
       return next(new Error('Unauthorized'));
     }
 
-    next();
+    try {
+      const env = getEnv();
+      const decoded = jwt.verify(token, env.AUTH_SECRET) as JWTPayload;
+      socket.data.userId = decoded.userId;
+      next();
+    } catch {
+      next(new Error('Unauthorized'));
+    }
   });
 
   io.on('connection', (socket: Socket) => {
-    socket.on('subscribe', async ({ userId }: { userId?: string }) => {
+    socket.on('subscribe', async () => {
+      const userId = socket.data.userId as string;
       if (!userId) {
         return;
       }
 
-      socket.data.userId = userId;
       socket.join(`user:${userId}`);
       await evaluateMilestones(userId, io);
     });

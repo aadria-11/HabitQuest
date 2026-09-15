@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AuthenticatedRequest } from '@shared/types';
-import { CreateHabitSchema, UpdateHabitSchema } from '@shared/schemas';
+import { CreateHabitSchema, UpdateHabitSchema, HabitListQuerySchema } from '@shared/schemas';
 import * as habitService from '../services/habit.service.js';
 
 export async function listHabits(
@@ -8,22 +8,27 @@ export async function listHabits(
   res: Response,
 ) {
   try {
-    const { search, status, sortBy, sortDir, page = '1', pageSize = '10' } = req.query;
+    const parsed = HabitListQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.errors });
+    }
+
+    const { search, status, sortBy, sortDir, page, pageSize } = parsed.data;
 
     const { habits, total } = await habitService.getHabits(req.user.userId, {
-      search: search as string | undefined,
-      status: status as string | undefined,
-      sortBy: (sortBy as any) || 'createdAt',
-      sortDir: (sortDir as any) || 'desc',
-      skip: (parseInt(page as string) - 1) * parseInt(pageSize as string),
-      take: parseInt(pageSize as string),
+      search,
+      status,
+      sortBy,
+      sortDir,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
     });
 
     res.json({
       data: habits,
       total,
-      page: parseInt(page as string),
-      pageSize: parseInt(pageSize as string),
+      page,
+      pageSize,
     });
   } catch (error) {
     console.error('Error listing habits:', error);

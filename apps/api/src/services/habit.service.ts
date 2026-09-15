@@ -155,7 +155,6 @@ export async function deleteHabit(userId: string, habitId: string): Promise<bool
 
   const io = getSocketIO();
   if (io) {
-    const event: HabitDeletedEvent = { type: 'habit:deleted', habitId };
     io.to(`user:${userId}`).emit('habit:deleted', habitId);
   }
 

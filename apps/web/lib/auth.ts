@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import GitHub from 'next-auth/providers/github';
+import jwt from 'jsonwebtoken';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 const INTERNAL_SECRET = process.env.INTERNAL_SECRET || '';
@@ -54,12 +55,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.name = user.name;
       }
 
+      if (token.userId) {
+        token.apiToken = jwt.sign(
+          { userId: token.userId, email: token.email, name: token.name },
+          AUTH_SECRET,
+          { expiresIn: '15m' },
+        );
+      }
+
       return token;
     },
 
     async session({ session, token }: any) {
       if (session.user) {
         session.user.id = token.userId;
+        session.apiToken = token.apiToken as string;
       }
       return session;
     },
@@ -74,5 +84,6 @@ declare module 'next-auth' {
       name?: string | null;
       image?: string | null;
     };
+    apiToken?: string;
   }
 }
