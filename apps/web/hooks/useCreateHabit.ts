@@ -11,7 +11,7 @@ export function useCreateHabit() {
   return useMutation({
     mutationFn: (data: CreateHabit) => api.post<Habit>('/api/habits', data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['habits'] });
+      queryClient.invalidateQueries({ queryKey: ['habits'] }, { exact: false });
     },
   });
 }
@@ -24,7 +24,7 @@ export function useUpdateHabit() {
       api.put<Habit>(`/api/habits/${id}`, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['habit', id] });
-      queryClient.invalidateQueries({ queryKey: ['habits'] });
+      queryClient.invalidateQueries({ queryKey: ['habits'] }, { exact: false });
     },
   });
 }
@@ -35,7 +35,7 @@ export function useDeleteHabit() {
   return useMutation({
     mutationFn: (id: string) => api.delete(`/api/habits/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['habits'] });
+      queryClient.invalidateQueries({ queryKey: ['habits'] }, { exact: false });
     },
   });
 }
