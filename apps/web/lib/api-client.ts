@@ -9,15 +9,41 @@ interface RequestOptions extends RequestInit {
 let sessionCache: { session: any; timestamp: number } | null = null;
 const SESSION_CACHE_TTL = 5000;
 
+function isTokenValid(session: any): boolean {
+  if (!session?.apiToken) return false;
+
+  try {
+    const parts = session.apiToken.split('.');
+    if (parts.length !== 3) return false;
+
+    const decoded = JSON.parse(atob(parts[1]));
+    const expiresAt = (decoded.exp || 0) * 1000;
+    const buffer = 120 * 1000;
+
+    return Date.now() + buffer < expiresAt;
+  } catch {
+    return false;
+  }
+}
+
 async function getCachedSession() {
   const now = Date.now();
   if (sessionCache && now - sessionCache.timestamp < SESSION_CACHE_TTL) {
-    return sessionCache.session;
+    if (isTokenValid(sessionCache.session)) {
+      return sessionCache.session;
+    }
+    sessionCache = null;
   }
 
   const session = await getSession();
-  sessionCache = { session, timestamp: now };
+  if (session && isTokenValid(session)) {
+    sessionCache = { session, timestamp: now };
+  }
   return session;
+}
+
+export function invalidateSessionCache() {
+  sessionCache = null;
 }
 
 export async function apiRequest<T>(

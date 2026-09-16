@@ -87,6 +87,7 @@ export function useHabitSocket(
     });
 
     return () => {
+      shownMilestonesRef.current.clear();
       socket.off('habit:created');
       socket.off('habit:updated');
       socket.off('habit:deleted');

@@ -26,7 +26,8 @@ export function useMilestoneNotifications() {
       return res.json();
     },
     enabled: !!session,
-    staleTime: Infinity,
+    staleTime: 30000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const acknowledgeMutation = useMutation({

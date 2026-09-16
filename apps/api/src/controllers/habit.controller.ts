@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { AuthenticatedRequest } from '@shared/types';
 import { CreateHabitSchema, UpdateHabitSchema, HabitListQuerySchema } from '@shared/schemas';
 import * as habitService from '../services/habit.service.js';
+import * as milestoneService from '../services/milestone.service.js';
 
 export async function listHabits(
   req: Request & AuthenticatedRequest,
@@ -126,26 +127,7 @@ export async function getMilestoneNotifications(
   res: Response,
 ) {
   try {
-    const { prisma } = await import('../lib/prisma.js');
-
-    const notifications = await prisma.milestoneNotification.findMany({
-      where: {
-        userId: req.user.userId,
-        acknowledged: false,
-      },
-      include: {
-        habit: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
+    const notifications = await milestoneService.getMilestoneNotifications(req.user.userId);
     res.json(notifications);
   } catch (error) {
     console.error('Error fetching milestone notifications:', error);

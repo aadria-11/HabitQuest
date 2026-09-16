@@ -4,6 +4,7 @@ import { signOut } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { invalidateSessionCache } from '@/lib/api-client';
 
 export function Navbar() {
   const { data: session } = useSession();
@@ -28,7 +29,10 @@ export function Navbar() {
             <span className="text-sm font-medium text-amber-200">{session?.user?.email}</span>
             <Button
               size="sm"
-              onClick={() => signOut({ redirectTo: '/login' })}
+              onClick={() => {
+                invalidateSessionCache();
+                signOut({ redirectTo: '/login' });
+              }}
               className="bg-amber-600 hover:bg-amber-700 text-amber-50 font-bold border-2 border-amber-500"
             >
               ⚔️ Leave Quest

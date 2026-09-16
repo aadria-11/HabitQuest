@@ -157,6 +157,7 @@ export async function updateHabit(
   const updatedWithCount = {
     ...updated,
     checkInCount: habit.checkInCount,
+    checkedInToday: habit.checkedInToday,
   } as Habit;
 
   const io = getSocketIO();

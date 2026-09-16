@@ -321,6 +321,8 @@ interface HabitCardWithCheckInProps {
 }
 
 function HabitCardWithCheckIn({ habit, onCheckInStatusChange }: HabitCardWithCheckInProps) {
+  if (!habit) return null;
+
   useEffect(() => {
     const isCheckedIn = habit.checkedInToday || false;
     onCheckInStatusChange(habit.id, isCheckedIn);

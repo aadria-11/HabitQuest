@@ -3,6 +3,29 @@ import { Server as SocketIOServer } from 'socket.io';
 
 const MILESTONES = [3, 7, 30];
 
+export async function getMilestoneNotifications(
+  userId: string,
+  filters?: { acknowledged?: boolean }
+) {
+  return prisma.milestoneNotification.findMany({
+    where: {
+      userId,
+      acknowledged: filters?.acknowledged ?? false,
+    },
+    include: {
+      habit: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+}
+
 export async function evaluateMilestones(
   userId: string,
   io: SocketIOServer,

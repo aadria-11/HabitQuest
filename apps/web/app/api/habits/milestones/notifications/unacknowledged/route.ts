@@ -1,28 +1,24 @@
-import { auth } from '@/lib/auth';
+import { withApiAuth } from '@/lib/api-routes';
 
-export async function GET(req: Request) {
-  const session = await auth();
+export async function GET() {
+  return withApiAuth(async (_, apiToken) => {
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/habits/milestones/notifications/unacknowledged`;
 
-  if (!session?.apiToken) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
 
-  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/habits/milestones/notifications/unacknowledged`;
+    if (!response.ok) {
+      return Response.json(
+        { error: 'Failed to fetch notifications' },
+        { status: response.status }
+      );
+    }
 
-  const response = await fetch(apiUrl, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${session.apiToken}`,
-    },
+    const data = await response.json();
+    return Response.json(data);
   });
-
-  if (!response.ok) {
-    return Response.json(
-      { error: 'Failed to fetch notifications' },
-      { status: response.status }
-    );
-  }
-
-  const data = await response.json();
-  return Response.json(data);
 }
