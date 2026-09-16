@@ -30,7 +30,7 @@ export function useHabits(options: {
   return useQuery({
     queryKey: ['habits', params],
     queryFn: () => api.get<ListResponse>('/api/habits', { params }),
-    staleTime: 0,
+    staleTime: 1000 * 60, // 1 minute
   });
 }
 
@@ -39,5 +39,6 @@ export function useHabit(id: string) {
     queryKey: ['habit', id],
     queryFn: () => api.get<Habit>(`/api/habits/${id}`),
     enabled: !!id,
+    staleTime: 1000 * 60, // 1 minute
   });
 }
