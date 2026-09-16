@@ -120,3 +120,66 @@ export async function deleteHabit(
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function getMilestoneNotifications(
+  req: Request & AuthenticatedRequest,
+  res: Response,
+) {
+  try {
+    const { prisma } = await import('../lib/prisma.js');
+
+    const notifications = await prisma.milestoneNotification.findMany({
+      where: {
+        userId: req.user.userId,
+        acknowledged: false,
+      },
+      include: {
+        habit: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    res.json(notifications);
+  } catch (error) {
+    console.error('Error fetching milestone notifications:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function acknowledgeMilestoneNotification(
+  req: Request & AuthenticatedRequest,
+  res: Response,
+) {
+  try {
+    const { notificationId } = req.params;
+    const { prisma } = await import('../lib/prisma.js');
+
+    const notification = await prisma.milestoneNotification.findFirst({
+      where: {
+        id: notificationId,
+        userId: req.user.userId,
+      },
+    });
+
+    if (!notification) {
+      return res.status(404).json({ error: 'Notification not found' });
+    }
+
+    await prisma.milestoneNotification.update({
+      where: { id: notificationId },
+      data: { acknowledged: true },
+    });
+
+    res.status(204).send();
+  } catch (error) {
+    console.error('Error acknowledging notification:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

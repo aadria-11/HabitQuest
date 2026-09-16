@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useHabits } from '@/hooks/useHabits';
-import { useCheckIns } from '@/hooks/useCheckIns';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/layout/EmptyState';
@@ -322,23 +321,12 @@ interface HabitCardWithCheckInProps {
 }
 
 function HabitCardWithCheckIn({ habit, onCheckInStatusChange }: HabitCardWithCheckInProps) {
-  const { data: checkIns, isLoading } = useCheckIns(habit.id);
-  const [isCheckedIn, setIsCheckedIn] = useState(false);
-
   useEffect(() => {
-    if (checkIns !== undefined) {
-      const today = new Date().toISOString().split('T')[0];
-      const checkedInToday = checkIns && checkIns.length > 0 && checkIns.some(
-        (ci) => {
-          const ciDate = new Date(ci.checkInDate);
-          const ciDateStr = ciDate.toISOString().split('T')[0];
-          return ciDateStr === today;
-        }
-      );
-      setIsCheckedIn(checkedInToday);
-      onCheckInStatusChange(habit.id, checkedInToday);
-    }
-  }, [checkIns, habit.id, onCheckInStatusChange]);
+    const isCheckedIn = habit.checkedInToday || false;
+    onCheckInStatusChange(habit.id, isCheckedIn);
+  }, [habit.id, habit.checkedInToday, onCheckInStatusChange]);
+
+  const isCheckedIn = habit.checkedInToday || false;
 
   const statusColorMap: Record<string, string> = {
     ACTIVE: 'from-green-900 to-green-950 border-green-700',

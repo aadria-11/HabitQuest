@@ -20,6 +20,7 @@ export async function createHabit(
   const habitWithCount = {
     ...habit,
     checkInCount: 0,
+    checkedInToday: false,
   } as Habit;
 
   const io = getSocketIO();
@@ -85,9 +86,21 @@ export async function getHabits(
     prisma.habit.count({ where }),
   ]);
 
+  const habitIds = habits.map((h) => h.id);
+  const today = new Date().toISOString().split('T')[0];
+  const todaysCheckIns = await prisma.habitCheckIn.findMany({
+    where: {
+      habitId: { in: habitIds },
+      checkInDate: new Date(today),
+    },
+    select: { habitId: true },
+  });
+  const checkedInTodayIds = new Set(todaysCheckIns.map((ci) => ci.habitId));
+
   const habitsWithCount = habits.map((habit) => ({
     ...habit,
     checkInCount: habit._count.checkIns,
+    checkedInToday: checkedInTodayIds.has(habit.id),
     _count: undefined,
   })) as unknown as Habit[];
 
@@ -97,29 +110,21 @@ export async function getHabits(
 export async function getHabit(userId: string, habitId: string): Promise<Habit | null> {
   const habit = await prisma.habit.findFirst({
     where: { id: habitId, userId },
-    select: {
-      id: true,
-      userId: true,
-      name: true,
-      description: true,
-      startDate: true,
-      status: true,
-      currentStreak: true,
-      bestStreak: true,
-      createdAt: true,
-      updatedAt: true,
-      _count: {
-        select: { checkIns: true },
-      },
+    include: {
+      checkIns: true,
     },
   });
 
   if (!habit) return null;
 
+  const today = new Date().toISOString().split('T')[0];
+  const todaysCheckIn = habit.checkIns.find(ci => ci.checkInDate.toISOString().split('T')[0] === today);
+
   return {
     ...habit,
-    checkInCount: habit._count.checkIns,
-    _count: undefined,
+    checkInCount: habit.checkIns.length,
+    checkedInToday: !!todaysCheckIn,
+    checkIns: undefined,
   } as unknown as Habit;
 }
 

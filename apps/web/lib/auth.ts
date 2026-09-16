@@ -56,11 +56,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       if (token.userId) {
-        token.apiToken = jwt.sign(
-          { userId: token.userId, email: token.email, name: token.name },
-          AUTH_SECRET,
-          { expiresIn: '15m' },
-        );
+        const now = Math.floor(Date.now() / 1000);
+        const tokenExpires = (token.apiTokenExpires as number) || 0;
+
+        if (!token.apiToken || now + 120 > tokenExpires) {
+          const expiresIn = 15 * 60;
+          token.apiToken = jwt.sign(
+            { userId: token.userId, email: token.email, name: token.name },
+            AUTH_SECRET,
+            { expiresIn },
+          );
+          token.apiTokenExpires = now + expiresIn;
+        }
       }
 
       return token;

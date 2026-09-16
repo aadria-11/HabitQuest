@@ -1,14 +1,25 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { initSocket } from '@/lib/socket';
 import { Habit } from '@shared/types';
 import { useSession } from 'next-auth/react';
 
-export function useHabitSocket(addToast?: (title: string, message: string) => void) {
+export function useHabitSocket(
+  addToast?: (title: string, message: string, duration?: number, options?: any) => void,
+  acknowledgeNotification?: (id: string) => void,
+) {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
+  const shownMilestonesRef = useRef<Set<string>>(new Set());
+  const addToastRef = useRef(addToast);
+  const acknowledgeNotificationRef = useRef(acknowledgeNotification);
+
+  useEffect(() => {
+    addToastRef.current = addToast;
+    acknowledgeNotificationRef.current = acknowledgeNotification;
+  }, [addToast, acknowledgeNotification]);
 
   useEffect(() => {
     if (!session?.user?.id || !session?.apiToken) return;
@@ -46,11 +57,28 @@ export function useHabitSocket(addToast?: (title: string, message: string) => vo
     );
 
     socket.on('milestone', (data) => {
-      if (addToast) {
-        addToast(
-          `${data.habitName}`,
-          `Reached a ${data.milestone}-day streak!`
-        );
+      if (!shownMilestonesRef.current.has(data.notificationId)) {
+        shownMilestonesRef.current.add(data.notificationId);
+
+        if (addToastRef.current) {
+          addToastRef.current(
+            `${data.habitName}`,
+            `Reached a ${data.milestone}-day streak!`,
+            undefined,
+            {
+              persistent: true,
+              action: {
+                label: 'OK',
+                onClick: () => {
+                  shownMilestonesRef.current.delete(data.notificationId);
+                  if (acknowledgeNotificationRef.current) {
+                    acknowledgeNotificationRef.current(data.notificationId);
+                  }
+                },
+              },
+            }
+          );
+        }
       }
 
       socket.emit('milestone:ack', {
@@ -66,5 +94,5 @@ export function useHabitSocket(addToast?: (title: string, message: string) => vo
       socket.off('streak:updated');
       socket.off('milestone');
     };
-  }, [queryClient, session, addToast]);
+  }, [queryClient, session?.apiToken, session?.user?.id]);
 }

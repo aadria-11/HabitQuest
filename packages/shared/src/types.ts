@@ -21,6 +21,7 @@ export interface Habit {
   currentStreak: number;
   bestStreak: number;
   checkInCount: number;
+  checkedInToday?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

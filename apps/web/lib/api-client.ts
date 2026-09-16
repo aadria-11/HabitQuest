@@ -6,6 +6,20 @@ interface RequestOptions extends RequestInit {
   params?: Record<string, string | number | boolean>;
 }
 
+let sessionCache: { session: any; timestamp: number } | null = null;
+const SESSION_CACHE_TTL = 5000;
+
+async function getCachedSession() {
+  const now = Date.now();
+  if (sessionCache && now - sessionCache.timestamp < SESSION_CACHE_TTL) {
+    return sessionCache.session;
+  }
+
+  const session = await getSession();
+  sessionCache = { session, timestamp: now };
+  return session;
+}
+
 export async function apiRequest<T>(
   endpoint: string,
   options: RequestOptions = {},
@@ -22,14 +36,13 @@ export async function apiRequest<T>(
     url += `?${query.toString()}`;
   }
 
-  const session = await getSession();
+  const session = await getCachedSession();
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
     ...(session?.apiToken && { 'Authorization': `Bearer ${session.apiToken}` }),
     ...fetchOptions.headers,
   };
-
 
   const response = await fetch(url, {
     ...fetchOptions,

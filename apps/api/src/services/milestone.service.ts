@@ -15,27 +15,34 @@ export async function evaluateMilestones(
   });
 
   for (const habit of habits) {
+    // Clean up notifications for milestones that are no longer relevant
+    await prisma.milestoneNotification.deleteMany({
+      where: {
+        habitId: habit.id,
+        milestone: {
+          gt: habit.currentStreak,
+        },
+      },
+    });
+
     for (const milestone of MILESTONES) {
       if (habit.currentStreak !== milestone) {
         continue;
       }
 
-      const existing =
-        await prisma.milestoneNotification.findUnique({
+      const { isNew, notificationId } = await prisma.$transaction(async (tx) => {
+        const existing = await tx.milestoneNotification.findFirst({
           where: {
-            habitId_milestone: {
-              habitId: habit.id,
-              milestone,
-            },
+            habitId: habit.id,
+            milestone,
           },
         });
 
-      if (existing) {
-        continue;
-      }
+        if (existing) {
+          return { isNew: false, notificationId: existing.id };
+        }
 
-      const notification =
-        await prisma.milestoneNotification.create({
+        const notification = await tx.milestoneNotification.create({
           data: {
             userId,
             habitId: habit.id,
@@ -43,12 +50,17 @@ export async function evaluateMilestones(
           },
         });
 
-      io.to(`user:${userId}`).emit('milestone', {
-        notificationId: notification.id,
-        habitId: habit.id,
-        habitName: habit.name,
-        milestone,
+        return { isNew: true, notificationId: notification.id };
       });
+
+      if (isNew) {
+        io.to(`user:${userId}`).emit('milestone', {
+          notificationId,
+          habitId: habit.id,
+          habitName: habit.name,
+          milestone,
+        });
+      }
     }
   }
 }

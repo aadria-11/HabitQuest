@@ -69,6 +69,7 @@ model MilestoneNotification {
   @@unique([habitId, milestone])
   @@index([userId])
   @@index([habitId])
+  @@index([habitId, milestone, acknowledged])
 }
 
 enum HabitStatus {
