@@ -9,8 +9,13 @@ export default function CreateHabitPage() {
   const createHabit = useCreateHabit();
 
   async function handleSubmit(data: any) {
-    await createHabit.mutateAsync(data);
-    router.push('/dashboard');
+    try {
+      await createHabit.mutateAsync(data);
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Failed to create habit:', error);
+      throw error;
+    }
   }
 
   return (
@@ -19,6 +24,11 @@ export default function CreateHabitPage() {
         <h1 className="text-4xl font-bold text-amber-300 mb-2" style={{fontFamily: 'Georgia, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.5)'}}>⚔️ Begin a New Quest</h1>
         <p className="text-amber-200 text-sm italic">Choose a meaningful habit and embark on your journey</p>
       </div>
+      {createHabit.isError && (
+        <div className="rounded-lg bg-red-900/40 p-4 border-2 border-red-700">
+          <p className="text-sm text-red-300 font-semibold">❌ Error creating habit: {createHabit.error?.message}</p>
+        </div>
+      )}
       <HabitForm onSubmit={handleSubmit} isLoading={createHabit.isPending} />
     </div>
   );

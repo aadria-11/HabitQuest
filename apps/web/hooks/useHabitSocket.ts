@@ -17,17 +17,17 @@ export function useHabitSocket(addToast?: (title: string, message: string) => vo
     socket.emit('subscribe');
 
     socket.on('habit:created', (habit: Habit) => {
-      queryClient.invalidateQueries({ queryKey: ['habits'] });
+      queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'habits' });
     });
 
     socket.on('habit:updated', (habit: Habit) => {
       queryClient.setQueryData(['habit', habit.id], habit);
-      queryClient.invalidateQueries({ queryKey: ['habits'] });
+      queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'habits' });
     });
 
     socket.on('habit:deleted', (habitId: string) => {
       queryClient.removeQueries({ queryKey: ['habit', habitId] });
-      queryClient.invalidateQueries({ queryKey: ['habits'] });
+      queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'habits' });
     });
 
     socket.on('habit:checkedin', ({ habitId }: { habitId: string; checkInDate: string }) => {
