@@ -12,7 +12,7 @@ export function useCheckIn() {
     onSuccess: (_, { habitId }) => {
       queryClient.invalidateQueries({ queryKey: ['checkins', habitId] });
       queryClient.invalidateQueries({ queryKey: ['habit', habitId] });
-      queryClient.invalidateQueries({ queryKey: ['habits'] }, { exact: false });
+      queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'habits' });
     },
   });
 }

@@ -66,9 +66,19 @@ export async function getHabits(
       orderBy,
       skip: options.skip || 0,
       take: options.take || 10,
-      include: {
-        checkIns: {
-          select: { id: true },
+      select: {
+        id: true,
+        userId: true,
+        name: true,
+        description: true,
+        startDate: true,
+        status: true,
+        currentStreak: true,
+        bestStreak: true,
+        createdAt: true,
+        updatedAt: true,
+        _count: {
+          select: { checkIns: true },
         },
       },
     }),
@@ -77,8 +87,8 @@ export async function getHabits(
 
   const habitsWithCount = habits.map((habit) => ({
     ...habit,
-    checkInCount: habit.checkIns.length,
-    checkIns: undefined,
+    checkInCount: habit._count.checkIns,
+    _count: undefined,
   })) as unknown as Habit[];
 
   return { habits: habitsWithCount, total };
@@ -87,9 +97,19 @@ export async function getHabits(
 export async function getHabit(userId: string, habitId: string): Promise<Habit | null> {
   const habit = await prisma.habit.findFirst({
     where: { id: habitId, userId },
-    include: {
-      checkIns: {
-        select: { id: true },
+    select: {
+      id: true,
+      userId: true,
+      name: true,
+      description: true,
+      startDate: true,
+      status: true,
+      currentStreak: true,
+      bestStreak: true,
+      createdAt: true,
+      updatedAt: true,
+      _count: {
+        select: { checkIns: true },
       },
     },
   });
@@ -98,8 +118,8 @@ export async function getHabit(userId: string, habitId: string): Promise<Habit |
 
   return {
     ...habit,
-    checkInCount: habit.checkIns.length,
-    checkIns: undefined,
+    checkInCount: habit._count.checkIns,
+    _count: undefined,
   } as unknown as Habit;
 }
 
