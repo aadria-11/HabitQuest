@@ -29,15 +29,8 @@ export function useHabits(options: {
 
   return useQuery({
     queryKey: ['habits', params],
-    queryFn: () => {
-      console.log('[useHabits] Fetching habits with params:', params);
-      return api.get<ListResponse>('/api/habits', { params }).then(res => {
-        console.log('[useHabits] Received habits:', res.data.length, 'habits', res.data);
-        return res;
-      });
-    },
+    queryFn: () => api.get<ListResponse>('/api/habits', { params }),
     staleTime: 0,
-    gcTime: 5 * 60 * 1000,
   });
 }
 

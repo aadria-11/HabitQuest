@@ -9,21 +9,9 @@ export function useCreateHabit() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateHabit) => {
-      console.log('[CreateHabit] Creating habit:', data);
-      return api.post<Habit>('/api/habits', data);
-    },
-    onSuccess: (habit) => {
-      console.log('[CreateHabit] Success! Created habit:', habit);
-      console.log('[CreateHabit] Invalidating queries with predicate');
-      queryClient.invalidateQueries({ predicate: (query) => {
-        const match = query.queryKey[0] === 'habits';
-        console.log('[CreateHabit] Query key:', query.queryKey, 'matches:', match);
-        return match;
-      }});
-    },
-    onError: (error) => {
-      console.error('[CreateHabit] Error:', error);
+    mutationFn: (data: CreateHabit) => api.post<Habit>('/api/habits', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'habits' });
     },
   });
 }
