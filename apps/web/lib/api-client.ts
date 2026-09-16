@@ -38,8 +38,9 @@ async function getCachedSession() {
   const session = await getSession();
   if (session && isTokenValid(session)) {
     sessionCache = { session, timestamp: now };
+    return session;
   }
-  return session;
+  return null;
 }
 
 export function invalidateSessionCache() {
