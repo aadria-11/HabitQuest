@@ -33,6 +33,13 @@ describe('Check-in Management Integration Tests', () => {
   let user2: { userId: string; token: string };
   let habit1Id: string;
   let habit2Id: string;
+  let testDateCounter = 0;
+
+  function getUniqueTestDate(): string {
+    const date = new Date(Date.now() - testDateCounter * 86400000);
+    testDateCounter++;
+    return date.toISOString().split('T')[0];
+  }
 
   beforeAll(async () => {
     user1 = await createUserAndGetToken('checkin-user1@test.com', 'Check-in User 1');
@@ -54,30 +61,30 @@ describe('Check-in Management Integration Tests', () => {
 
   describe('[checkin-001] Create Today\'s Check-in', () => {
     it('Authenticated user can create check-in for today', async () => {
-      const today = new Date().toISOString().split('T')[0];
+      const testDate = getUniqueTestDate();
 
       const res = await request(app)
         .post(`/api/habits/${habit1Id}/checkin`)
         .set('Authorization', `Bearer ${user1.token}`)
         .send({
-          date: today,
+          date: testDate,
           notes: 'Great workout!',
         });
 
       expect(res.status).toBe(201);
       expect(res.body).toHaveProperty('id');
-      expect(res.body.date).toBe(today);
+      expect(res.body.date).toBe(testDate);
       expect(res.body.habitId).toBe(habit1Id);
     });
 
     it('Check-in includes habitId, date, notes', async () => {
-      const today = new Date().toISOString().split('T')[0];
+      const testDate = getUniqueTestDate();
 
       const res = await request(app)
         .post(`/api/habits/${habit1Id}/checkin`)
         .set('Authorization', `Bearer ${user1.token}`)
         .send({
-          date: today,
+          date: testDate,
           notes: 'Test notes',
         });
 
@@ -88,33 +95,33 @@ describe('Check-in Management Integration Tests', () => {
     });
 
     it('Cannot create check-in without authentication', async () => {
-      const today = new Date().toISOString().split('T')[0];
+      const testDate = getUniqueTestDate();
 
       const res = await request(app)
         .post(`/api/habits/${habit1Id}/checkin`)
-        .send({ date: today });
+        .send({ date: testDate });
 
       expect(res.status).toBe(401);
     });
 
     it('Cannot create check-in for non-existent habit', async () => {
-      const today = new Date().toISOString().split('T')[0];
+      const testDate = getUniqueTestDate();
 
       const res = await request(app)
         .post(`/api/habits/non-existent-habit-id/checkin`)
         .set('Authorization', `Bearer ${user1.token}`)
-        .send({ date: today });
+        .send({ date: testDate });
 
       expect(res.status).toBe(404);
     });
 
     it('[auth-002] Cannot create check-in for another user\'s habit', async () => {
-      const today = new Date().toISOString().split('T')[0];
+      const testDate = getUniqueTestDate();
 
       const res = await request(app)
         .post(`/api/habits/${habit2Id}/checkin`)
         .set('Authorization', `Bearer ${user1.token}`)
-        .send({ date: today });
+        .send({ date: testDate });
 
       expect([403, 404]).toContain(res.status);
     });
@@ -122,25 +129,25 @@ describe('Check-in Management Integration Tests', () => {
 
   describe('[checkin-002] Prevent Duplicate Check-in', () => {
     it('Cannot create second check-in for same habit/date', async () => {
-      const today = new Date().toISOString().split('T')[0];
+      const testDate = getUniqueTestDate();
 
       // First check-in
       await request(app)
         .post(`/api/habits/${habit1Id}/checkin`)
         .set('Authorization', `Bearer ${user1.token}`)
-        .send({ date: today });
+        .send({ date: testDate });
 
       // Second check-in (duplicate attempt)
       const res = await request(app)
         .post(`/api/habits/${habit1Id}/checkin`)
         .set('Authorization', `Bearer ${user1.token}`)
-        .send({ date: today });
+        .send({ date: testDate });
 
       expect(res.status).toBe(409);
     });
 
     it('[checkin-002] Duplicate check-in returns HTTP 409 Conflict', async () => {
-      const testDate = new Date(Date.now() - 86400000).toISOString().split('T')[0]; // Yesterday
+      const testDate = getUniqueTestDate();
 
       // Create first check-in
       await request(app)
@@ -158,27 +165,27 @@ describe('Check-in Management Integration Tests', () => {
     });
 
     it('[checkin-002] Error message indicates duplicate exists', async () => {
-      const futureDate = new Date(Date.now() + 86400000).toISOString().split('T')[0]; // Tomorrow
+      const testDate = getUniqueTestDate();
 
       // Create first check-in
       await request(app)
         .post(`/api/habits/${habit1Id}/checkin`)
         .set('Authorization', `Bearer ${user1.token}`)
-        .send({ date: futureDate });
+        .send({ date: testDate });
 
       // Try to duplicate
       const res = await request(app)
         .post(`/api/habits/${habit1Id}/checkin`)
         .set('Authorization', `Bearer ${user1.token}`)
-        .send({ date: futureDate });
+        .send({ date: testDate });
 
       expect(res.status).toBe(409);
       expect(res.body.error || res.body.message).toBeDefined();
     });
 
     it('[checkin-002] User can create check-in for different dates', async () => {
-      const date1 = new Date(Date.now() - 2 * 86400000).toISOString().split('T')[0];
-      const date2 = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+      const date1 = getUniqueTestDate();
+      const date2 = getUniqueTestDate();
 
       const res1 = await request(app)
         .post(`/api/habits/${habit1Id}/checkin`)
@@ -199,13 +206,13 @@ describe('Check-in Management Integration Tests', () => {
 
   describe('List Check-ins', () => {
     it('User can list check-ins for their habit', async () => {
-      const today = new Date().toISOString().split('T')[0];
+      const testDate = getUniqueTestDate();
 
       // Create a check-in first
       await request(app)
         .post(`/api/habits/${habit1Id}/checkin`)
         .set('Authorization', `Bearer ${user1.token}`)
-        .send({ date: today });
+        .send({ date: testDate });
 
       // List check-ins
       const res = await request(app)
@@ -229,13 +236,13 @@ describe('Check-in Management Integration Tests', () => {
 
   describe('Cancel Check-in', () => {
     it('User can cancel their own check-in', async () => {
-      const today = new Date().toISOString().split('T')[0];
+      const testDate = getUniqueTestDate();
 
       // Create a check-in
       const createRes = await request(app)
         .post(`/api/habits/${habit1Id}/checkin`)
         .set('Authorization', `Bearer ${user1.token}`)
-        .send({ date: today });
+        .send({ date: testDate });
 
       const checkInId = createRes.body.id;
 

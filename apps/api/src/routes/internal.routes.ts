@@ -14,7 +14,7 @@ router.post('/users/sync', internalAuthMiddleware, async (req: Request, res: Res
     }
 
     const user = await syncUser(parsed.data);
-    res.json({ userId: user.id });
+    res.status(201).json({ userId: user.id });
   } catch (error) {
     console.error('Error syncing user:', error);
     res.status(500).json({ error: 'Internal server error' });

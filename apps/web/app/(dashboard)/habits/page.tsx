@@ -24,7 +24,7 @@ export default function HabitsPage() {
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-slate-900">Habits</h1>
-        <Link href="/habits/new">
+        <Link href="/habits/new" data-test="new-habit-btn">
           <Button className="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold border-2 border-amber-500">
             ⚔️ Create New
           </Button>
@@ -71,6 +71,7 @@ export default function HabitsPage() {
           {data.data.map((habit) => (
             <div
               key={habit.id}
+              data-test="habit-card"
               className="group flex flex-col rounded-xl border-2 border-amber-700 bg-gradient-to-br from-amber-900 to-amber-950 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 focus-within:ring-2 focus-within:ring-amber-400"
             >
               {/* Header - Details Section */}
@@ -127,7 +128,7 @@ export default function HabitsPage() {
 
               {/* Actions Section */}
               <div className="border-t border-amber-700 px-6 py-4 flex flex-col gap-2">
-                <Link href={`/habits/${habit.id}`} className="w-full">
+                <Link href={`/habits/${habit.id}`} className="w-full" data-test={`habit-view-${habit.id}`}>
                   <Button className="w-full bg-amber-700 hover:bg-amber-600 text-amber-50 font-bold border-2 border-amber-600 transition-all">
                     📖 View Quest
                   </Button>
@@ -142,7 +143,7 @@ export default function HabitsPage() {
                       Edit
                     </Button>
                   ) : (
-                    <Link href={`/habits/${habit.id}/edit`} className="flex-1">
+                    <Link href={`/habits/${habit.id}/edit`} className="flex-1" data-test={`habit-edit-${habit.id}`}>
                       <Button className="w-full bg-amber-800 hover:bg-amber-700 text-amber-50 font-bold border-2 border-amber-700 transition-all">
                         ✏️ Edit
                       </Button>
@@ -151,6 +152,7 @@ export default function HabitsPage() {
                   <Button
                     onClick={() => handleDelete(habit.id)}
                     disabled={deleteHabit.isPending}
+                    data-test={`habit-delete-${habit.id}`}
                     className="flex-1 bg-red-900 hover:bg-red-800 text-red-100 font-bold border-2 border-red-700 transition-all disabled:opacity-60"
                   >
                     🔥 Delete

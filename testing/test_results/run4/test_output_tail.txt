@@ -1,0 +1,200 @@
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[87/102]⎯
+
+ FAIL  src/services/habit.service.test.ts > Habit Service - Unit Tests > getUserHabits > should return empty array if user has no habits
+TypeError: getUserHabits is not a function
+ ❯ src/services/habit.service.test.ts:307:28
+    305|       vi.mocked(prisma.habit.findMany).mockResolvedValue([]);
+    306|
+    307|       const result = await getUserHabits('user-with-no-habits');
+       |                            ^
+    308|
+    309|       expect(result).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[88/102]⎯
+
+ FAIL  src/services/habit.service.test.ts > Habit Service - Unit Tests > getUserHabits > should enforce user isolation
+TypeError: getUserHabits is not a function
+ ❯ src/services/habit.service.test.ts:315:13
+    313|       const userId = 'user-123';
+    314|
+    315|       await getUserHabits(userId);
+       |             ^
+    316|
+    317|       expect(prisma.habit.findMany).toHaveBeenCalledWith(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[89/102]⎯
+
+ FAIL  src/services/habit.service.test.ts > Habit Service - Unit Tests > Habit Status Values > should only accept valid status values: active, paused, archived
+AssertionError: expected [Function] to throw error including 'Invalid status' but got '__vite_ssr_import_0__.prisma.habit.fi…'
+
+Expected: "Invalid status"
+Received: "__vite_ssr_import_0__.prisma.habit.findFirst is not a function"
+
+ ❯ src/services/habit.service.test.ts:337:10
+    335|         await expect(
+    336|           updateHabit('habit-1', 'user-123', { status: status as any })
+    337|         ).rejects.toThrow('Invalid status');
+       |          ^
+    338|       }
+    339|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[90/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > calculateCurrentStreak > should calculate current streak from check-in history
+TypeError: calculateCurrentStreak is not a function
+ ❯ src/services/streak.service.test.ts:41:28
+     39|       );
+     40|
+     41|       const streak = await calculateCurrentStreak(habitId);
+       |                            ^
+     42|
+     43|       expect(streak).toBe(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[91/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > calculateCurrentStreak > should break streak if a day is missed
+TypeError: calculateCurrentStreak is not a function
+ ❯ src/services/streak.service.test.ts:62:28
+     60|       );
+     61|
+     62|       const streak = await calculateCurrentStreak(habitId);
+       |                            ^
+     63|
+     64|       expect(streak).toBe(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[92/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > calculateCurrentStreak > should return 0 if no check-ins exist
+TypeError: calculateCurrentStreak is not a function
+ ❯ src/services/streak.service.test.ts:70:28
+     68|       vi.mocked(prisma.habitCheckIn.findMany).mockResolvedValue([]);
+     69|
+     70|       const streak = await calculateCurrentStreak('habit-1');
+       |                            ^
+     71|
+     72|       expect(streak).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[93/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > calculateCurrentStreak > should reset streak if latest check-in is older than yesterday
+TypeError: calculateCurrentStreak is not a function
+ ❯ src/services/streak.service.test.ts:89:28
+     87|       );
+     88|
+     89|       const streak = await calculateCurrentStreak(habitId);
+       |                            ^
+     90|
+     91|       expect(streak).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[94/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > calculateBestStreak > should find the longest consecutive streak
+TypeError: calculateBestStreak is not a function
+ ❯ src/services/streak.service.test.ts:131:32
+    129|       );
+    130|
+    131|       const bestStreak = await calculateBestStreak(habitId);
+       |                                ^
+    132|
+    133|       expect(bestStreak).toBe(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[95/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > calculateBestStreak > should handle multiple streak sequences
+TypeError: calculateBestStreak is not a function
+ ❯ src/services/streak.service.test.ts:210:32
+    208|       );
+    209|
+    210|       const bestStreak = await calculateBestStreak(habitId);
+       |                                ^
+    211|
+    212|       expect(bestStreak).toBe(6);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[96/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > calculateBestStreak > should return 0 if no check-ins exist
+TypeError: calculateBestStreak is not a function
+ ❯ src/services/streak.service.test.ts:218:32
+    216|       vi.mocked(prisma.habitCheckIn.findMany).mockResolvedValue([]);
+    217|
+    218|       const bestStreak = await calculateBestStreak('habit-1');
+       |                                ^
+    219|
+    220|       expect(bestStreak).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[97/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > canCheckInToday > should allow check-in if not already checked in today
+TypeError: canCheckInToday is not a function
+ ❯ src/services/streak.service.test.ts:235:32
+    233|       ]);
+    234|
+    235|       const canCheckIn = await canCheckInToday(habitId);
+       |                                ^
+    236|
+    237|       expect(canCheckIn).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[98/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > canCheckInToday > should prevent duplicate check-in on same day
+TypeError: canCheckInToday is not a function
+ ❯ src/services/streak.service.test.ts:249:32
+    247|       ]);
+    248|
+    249|       const canCheckIn = await canCheckInToday(habitId);
+       |                                ^
+    250|
+    251|       expect(canCheckIn).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[99/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > canCheckInToday > should allow check-in if no previous check-ins exist
+TypeError: canCheckInToday is not a function
+ ❯ src/services/streak.service.test.ts:257:32
+    255|       vi.mocked(prisma.habitCheckIn.findMany).mockResolvedValue([]);
+    256|
+    257|       const canCheckIn = await canCheckInToday('habit-1');
+       |                                ^
+    258|
+    259|       expect(canCheckIn).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[100/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > updateStreaks > should update current and best streaks after check-in
+TypeError: updateStreaks is not a function
+ ❯ src/services/streak.service.test.ts:269:13
+    267|       vi.mocked(prisma.habitCheckIn.findMany).mockResolvedValue([]);
+    268|
+    269|       await updateStreaks(habitId);
+       |             ^
+    270|
+    271|       expect(prisma.habitCheckIn.findMany).toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[101/102]⎯
+
+ FAIL  src/services/streak.service.test.ts > Streak Service - Unit Tests > Timezone Handling > should handle UTC storage correctly
+TypeError: calculateCurrentStreak is not a function
+ ❯ src/services/streak.service.test.ts:288:28
+    286|       );
+    287|
+    288|       const result = await calculateCurrentStreak(habitId);
+       |                            ^
+    289|
+    290|       expect(result).toBeGreaterThanOrEqual(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[102/102]⎯
+
+
+ Test Files  8 failed | 3 passed (11)
+      Tests  102 failed | 58 passed (160)
+   Start at  12:30:20
+   Duration  49.86s (tests 70%, import 18%, transform 11%, worker 1%)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\aonutu\ClaudeProjects\HabitQuest\apps\api
+npm error workspace api@0.1.0
+npm error location C:\Users\aonutu\ClaudeProjects\HabitQuest\apps\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest

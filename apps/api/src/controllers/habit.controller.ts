@@ -26,7 +26,7 @@ export async function listHabits(
     });
 
     res.json({
-      data: habits,
+      habits,
       total,
       page,
       pageSize,
@@ -115,7 +115,7 @@ export async function deleteHabit(
       return res.status(404).json({ error: 'Habit not found' });
     }
 
-    res.status(204).send();
+    res.status(200).json({ success: true });
   } catch (error) {
     console.error('Error deleting habit:', error);
     res.status(500).json({ error: 'Internal server error' });

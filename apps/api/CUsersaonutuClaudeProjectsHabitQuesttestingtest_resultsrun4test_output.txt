@@ -1,0 +1,78 @@
+
+> api@0.1.0 test
+> vitest
+
+
+ RUN  v5.0.0 C:/Users/aonutu/ClaudeProjects/HabitQuest/apps/api
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-001] Create Today's Check-in > Check-in includes habitId, date, notes
+prisma:query SELECT "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt" FROM "public"."Habit" WHERE ("public"."Habit"."id" = $1 AND "public"."Habit"."userId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-001] Create Today's Check-in > Check-in includes habitId, date, notes
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt" FROM "public"."HabitCheckIn" WHERE (("public"."HabitCheckIn"."habitId" = $1 AND "public"."HabitCheckIn"."checkInDate" = $2) AND 1=1) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query SELECT "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt" FROM "public"."Habit" WHERE ("public"."Habit"."id" = $1 AND "public"."Habit"."userId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt" FROM "public"."HabitCheckIn" WHERE (("public"."HabitCheckIn"."habitId" = $1 AND "public"."HabitCheckIn"."checkInDate" = $2) AND 1=1) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query BEGIN
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query INSERT INTO "public"."HabitCheckIn" ("id","habitId","checkInDate","comment","createdAt") VALUES ($1,$2,$3,$4,$5) RETURNING "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt"
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."checkInDate" FROM "public"."HabitCheckIn" WHERE "public"."HabitCheckIn"."habitId" = $1 OFFSET $2
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query UPDATE "public"."Habit" SET "currentStreak" = $1, "bestStreak" = $2, "updatedAt" = $3 WHERE ("public"."Habit"."id" = $4 AND 1=1) RETURNING "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt"
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query COMMIT
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query SELECT "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt" FROM "public"."Habit" WHERE ("public"."Habit"."id" = $1 AND "public"."Habit"."userId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt" FROM "public"."HabitCheckIn" WHERE (("public"."HabitCheckIn"."habitId" = $1 AND "public"."HabitCheckIn"."checkInDate" = $2) AND 1=1) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > Cancel Check-in > User can cancel their own check-in
+prisma:query SELECT "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt" FROM "public"."Habit" WHERE ("public"."Habit"."id" = $1 AND "public"."Habit"."userId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > Cancel Check-in > User can cancel their own check-in
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt" FROM "public"."HabitCheckIn" WHERE (("public"."HabitCheckIn"."habitId" = $1 AND "public"."HabitCheckIn"."checkInDate" = $2) AND 1=1) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > Cancel Check-in > User can cancel their own check-in
+prisma:query SELECT "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt" FROM "public"."Habit" WHERE ("public"."Habit"."id" = $1 AND "public"."Habit"."userId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > Cancel Check-in > User can cancel their own check-in
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt" FROM "public"."HabitCheckIn" WHERE ("public"."HabitCheckIn"."id" = $1 AND "public"."HabitCheckIn"."habitId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests
+prisma:query INSERT INTO "public"."User" ("id","provider","providerAccountId","email","name","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT ("provider","providerAccountId") DO UPDATE SET "email" = $8, "name" = $9, "updatedAt" = $10 WHERE (("public"."User"."provider" = $11 AND "public"."User"."providerAccountId" = $12) AND 1=1) RETURNING "public"."User"."id", "public"."User"."provider", "public"."User"."providerAccountId", "public"."User"."email", "public"."User"."name", "public"."User"."image", "public"."User"."createdAt", "public"."User"."updatedAt"
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests
+prisma:query INSERT INTO "public"."User" ("id","provider","providerAccountId","email","name","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT ("provider","providerAccountId") DO UPDATE SET "email" = $8, "name" = $9, "updatedAt" = $10 WHERE (("public"."User"."provider" = $11 AND "public"."User"."providerAccountId" = $12) AND 1=1) RETURNING "public"."User"."id", "public"."User"."provider", "public"."User"."providerAccountId", "public"."User"."email", "public"."User"."name", "public"."User"."image", "public"."User"."createdAt", "public"."User"."updatedAt"
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests
+prisma:query INSERT INTO "public"."Habit" ("id","userId","name","startDate","status","frequency","currentStreak","bestStreak","createdAt","updatedAt") VALUES ($1,$2,$3,$4,CAST($5::text AS "public"."HabitStatus"),$6,$7,$8,$9,$10) RETURNING "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt"
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests
+prisma:query INSERT INTO "public"."Habit" ("id","userId","name","startDate","status","frequency","currentStreak","bestStreak","createdAt","updatedAt") VALUES ($1,$2,$3,$4,CAST($5::text AS "public"."HabitStatus"),$6,$7,$8,$9,$10) RETURNING "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt"
+
+ ❯ src/routes/checkins.integration.test.ts (12 tests | 3 failed) 1383ms
+   ❯ Check-in Management Integration Tests (12)
+     ❯ [checkin-001] Create Today's Check-in (5)
+       × Check-in includes habitId, date, notes 50ms
+     ❯ [checkin-002] Prevent Duplicate Check-in (4)
+       × [checkin-002] User can create check-in for different dates 46ms
+     ❯ Cancel Check-in (1)
+       × User can cancel their own check-in 41ms
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  3 failed | 56 passed (59)
+   Start at  12:16:12
+   Duration  5.92s (import 44%, tests 36%, transform 19%, worker 1%)
+

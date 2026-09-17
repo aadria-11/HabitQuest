@@ -37,7 +37,7 @@ A multi-user web application for tracking daily habits with real-time synchroniz
 - Vitest
 - React Testing Library
 - Supertest
-- Playwright (E2E, not yet implemented)
+- Playwright (E2E)
 
 ## Project Structure
 

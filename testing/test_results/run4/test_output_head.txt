@@ -1,0 +1,300 @@
+
+> api@0.1.0 test
+> vitest
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:7:31). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+ RUN  v5.0.0 C:/Users/aonutu/ClaudeProjects/HabitQuest/apps/api
+
+ ❯ src/services/streak.service.test.ts (12 tests | 12 failed) 76ms
+   ❯ Streak Service - Unit Tests (12)
+     ❯ calculateCurrentStreak (4)
+       × should calculate current streak from check-in history 23ms
+       × should break streak if a day is missed 3ms
+       × should return 0 if no check-ins exist 2ms
+       × should reset streak if latest check-in is older than yesterday 2ms
+     ❯ calculateBestStreak (3)
+       × should find the longest consecutive streak 2ms
+       × should handle multiple streak sequences 2ms
+       × should return 0 if no check-ins exist 2ms
+     ❯ canCheckInToday (3)
+       × should allow check-in if not already checked in today 1ms
+       × should prevent duplicate check-in on same day 2ms
+       × should allow check-in if no previous check-ins exist 4ms
+     ❯ updateStreaks (1)
+       × should update current and best streaks after check-in 2ms
+     ❯ Timezone Handling (1)
+       × should handle UTC storage correctly 1ms
+ ❯ src/services/checkin.service.test.ts (13 tests | 13 failed) 77ms
+   ❯ Check-In Service - Unit Tests (13)
+     ❯ createCheckIn (5)
+       × should create a check-in for a habit 27ms
+       × should prevent duplicate check-ins on same day 18ms
+       × should verify habit belongs to user before creating check-in 4ms
+       × should not allow check-in if habit status is not active 4ms
+       × should only allow one check-in per calendar day 4ms
+     ❯ getCheckInHistory (4)
+       × should retrieve all check-ins for a habit 2ms
+       × should enforce user isolation when retrieving history 1ms
+       × should return empty array if no check-ins exist 1ms
+       × should return check-ins in reverse chronological order 1ms
+     ❯ getCheckInsByDate (2)
+       × should retrieve check-ins for a specific date 2ms
+       × should return null if no check-in exists for date 1ms
+     ❯ User Isolation (1)
+       × should not allow access to another user's check-ins 1ms
+     ❯ Validation (1)
+       × should validate check-in date is not in the future 3ms
+ ❯ src/services/habit.service.test.ts (16 tests | 16 failed) 79ms
+   ❯ Habit Service - Unit Tests (16)
+     ❯ createHabit (3)
+       × should create a habit with valid input 24ms
+       × should fail if required fields are missing 18ms
+       × should enforce userId scoping 2ms
+     ❯ updateHabit (3)
+       × should update habit with valid data 3ms
+       × should only allow users to update their own habits 4ms
+       × should not allow invalid status values 3ms
+     ❯ deleteHabit (2)
+       × should delete habit successfully 2ms
+       × should prevent deleting another user's habit 3ms
+     ❯ getHabitById (3)
+       × should retrieve habit by ID 2ms
+       × should return null for non-existent habit 1ms
+       × should enforce userId scoping in retrieval 1ms
+     ❯ getUserHabits (4)
+       × should retrieve all habits for a user 1ms
+       × should filter by status if provided 1ms
+       × should return empty array if user has no habits 1ms
+       × should enforce user isolation 1ms
+     ❯ Habit Status Values (1)
+       × should only accept valid status values: active, paused, archived 6ms
+ ❯ src/services/auth.middleware.test.ts (13 tests | 13 failed) 47ms
+   ❯ Auth Middleware - Unit Tests (13)
+     ❯ verifyAuthSession (4)
+       × should verify valid session token 23ms
+       × should reject expired session 2ms
+       × should reject missing user data 2ms
+       × should require user.id 2ms
+     ❯ protectedRoute (4)
+       × should allow access with valid session 1ms
+       × should deny access without session 1ms
+       × should deny access with invalid session 1ms
+       × should deny access if user not authenticated 1ms
+     ❯ SSO Authentication (3)
+       × should support Google OAuth 2ms
+       × should support GitHub OAuth 1ms
+       × should reject password-based authentication 1ms
+     ❯ Session Security (2)
+       × should not expose session tokens in logs 1ms
+       × should validate session format 1ms
+ ❯ src/routes/checkin.api.integration.test.ts (16 tests | 14 failed) 1217ms
+   ❯ Check-In API - Integration Tests (16)
+     ❯ POST /api/habits/:id/checkin (8)
+       × should create a check-in for a habit 236ms
+       × should prevent duplicate check-in on same day 32ms
+       × should prevent check-in for paused habit 226ms
+       × should prevent check-in for archived habit 34ms
+       × should not allow check-in for future dates 99ms
+       × should not allow check-in for other user's habits 95ms
+       × should update habit streaks on check-in 37ms
+     ❯ GET /api/habits/:id/checkins (5)
+       × should retrieve check-in history for a habit 37ms
+       × should return empty array if no check-ins exist 25ms
+       × should enforce user isolation 26ms
+       × should return check-ins in reverse chronological order 62ms
+     ❯ Streak Calculation Integration (2)
+       × should correctly calculate current streak with consecutive check-ins 109ms
+       × should break streak when a day is missed 54ms
+     ❯ User Isolation for Check-Ins (1)
+       × should not allow user2 to see user1's check-in history 35ms
+ ❯ src/routes/habit.api.integration.test.ts (24 tests | 20 failed) 1191ms
+   ❯ Habit API - Integration Tests (24)
+     ❯ GET /api/habits (5)
+       × should retrieve all habits for authenticated user 108ms
+       × should filter habits by status 36ms
+       × should support pagination 46ms
+       × should only return user's own habits 37ms
+     ❯ POST /api/habits (5)
+       × should create a new habit 136ms
+       × should validate required fields 70ms
+       × should validate habit status 91ms
+       × should assign habit to authenticated user 49ms
+     ❯ GET /api/habits/:id (3)
+       × should retrieve habit by ID 64ms
+       × should return 404 for non-existent habit 48ms
+       × should prevent access to other user's habits 51ms
+     ❯ PUT /api/habits/:id (4)
+       × should update habit 15ms
+       × should validate status on update 26ms
+       × should prevent unauthorized updates 17ms
+     ❯ DELETE /api/habits/:id (4)
+       × should delete habit 24ms
+       × should prevent deletion of other user's habits 18ms
+       × should return 404 when deleting non-existent habit 23ms
+     ❯ User Isolation (1)
+       × should not allow user1 to access user2's habits 23ms
+     ❯ Habit Status Validation (2)
+       × should accept valid statuses: active, paused, archived 16ms
+       × should reject invalid statuses 15ms
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-001] Create Today's Check-in > Check-in includes habitId, date, notes
+prisma:query SELECT "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt" FROM "public"."Habit" WHERE ("public"."Habit"."id" = $1 AND "public"."Habit"."userId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-001] Create Today's Check-in > Check-in includes habitId, date, notes
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt" FROM "public"."HabitCheckIn" WHERE (("public"."HabitCheckIn"."habitId" = $1 AND "public"."HabitCheckIn"."checkInDate" = $2) AND 1=1) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query SELECT "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt" FROM "public"."Habit" WHERE ("public"."Habit"."id" = $1 AND "public"."Habit"."userId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt" FROM "public"."HabitCheckIn" WHERE (("public"."HabitCheckIn"."habitId" = $1 AND "public"."HabitCheckIn"."checkInDate" = $2) AND 1=1) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query BEGIN
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query INSERT INTO "public"."HabitCheckIn" ("id","habitId","checkInDate","comment","createdAt") VALUES ($1,$2,$3,$4,$5) RETURNING "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt"
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."checkInDate" FROM "public"."HabitCheckIn" WHERE "public"."HabitCheckIn"."habitId" = $1 OFFSET $2
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query UPDATE "public"."Habit" SET "currentStreak" = $1, "bestStreak" = $2, "updatedAt" = $3 WHERE ("public"."Habit"."id" = $4 AND 1=1) RETURNING "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt"
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query COMMIT
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query SELECT "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt" FROM "public"."Habit" WHERE ("public"."Habit"."id" = $1 AND "public"."Habit"."userId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > [checkin-002] Prevent Duplicate Check-in > [checkin-002] User can create check-in for different dates
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt" FROM "public"."HabitCheckIn" WHERE (("public"."HabitCheckIn"."habitId" = $1 AND "public"."HabitCheckIn"."checkInDate" = $2) AND 1=1) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > Cancel Check-in > User can cancel their own check-in
+prisma:query SELECT "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt" FROM "public"."Habit" WHERE ("public"."Habit"."id" = $1 AND "public"."Habit"."userId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > Cancel Check-in > User can cancel their own check-in
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt" FROM "public"."HabitCheckIn" WHERE (("public"."HabitCheckIn"."habitId" = $1 AND "public"."HabitCheckIn"."checkInDate" = $2) AND 1=1) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > Cancel Check-in > User can cancel their own check-in
+prisma:query SELECT "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt" FROM "public"."Habit" WHERE ("public"."Habit"."id" = $1 AND "public"."Habit"."userId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests > Cancel Check-in > User can cancel their own check-in
+prisma:query SELECT "public"."HabitCheckIn"."id", "public"."HabitCheckIn"."habitId", "public"."HabitCheckIn"."checkInDate", "public"."HabitCheckIn"."comment", "public"."HabitCheckIn"."createdAt" FROM "public"."HabitCheckIn" WHERE ("public"."HabitCheckIn"."id" = $1 AND "public"."HabitCheckIn"."habitId" = $2) LIMIT $3 OFFSET $4
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests
+prisma:query INSERT INTO "public"."User" ("id","provider","providerAccountId","email","name","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT ("provider","providerAccountId") DO UPDATE SET "email" = $8, "name" = $9, "updatedAt" = $10 WHERE (("public"."User"."provider" = $11 AND "public"."User"."providerAccountId" = $12) AND 1=1) RETURNING "public"."User"."id", "public"."User"."provider", "public"."User"."providerAccountId", "public"."User"."email", "public"."User"."name", "public"."User"."image", "public"."User"."createdAt", "public"."User"."updatedAt"
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests
+prisma:query INSERT INTO "public"."User" ("id","provider","providerAccountId","email","name","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT ("provider","providerAccountId") DO UPDATE SET "email" = $8, "name" = $9, "updatedAt" = $10 WHERE (("public"."User"."provider" = $11 AND "public"."User"."providerAccountId" = $12) AND 1=1) RETURNING "public"."User"."id", "public"."User"."provider", "public"."User"."providerAccountId", "public"."User"."email", "public"."User"."name", "public"."User"."image", "public"."User"."createdAt", "public"."User"."updatedAt"
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests
+prisma:query INSERT INTO "public"."Habit" ("id","userId","name","startDate","status","frequency","currentStreak","bestStreak","createdAt","updatedAt") VALUES ($1,$2,$3,$4,CAST($5::text AS "public"."HabitStatus"),$6,$7,$8,$9,$10) RETURNING "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt"
+
+stdout | src/routes/checkins.integration.test.ts > Check-in Management Integration Tests
+prisma:query INSERT INTO "public"."Habit" ("id","userId","name","startDate","status","frequency","currentStreak","bestStreak","createdAt","updatedAt") VALUES ($1,$2,$3,$4,CAST($5::text AS "public"."HabitStatus"),$6,$7,$8,$9,$10) RETURNING "public"."Habit"."id", "public"."Habit"."userId", "public"."Habit"."name", "public"."Habit"."description", "public"."Habit"."startDate", "public"."Habit"."status"::text, "public"."Habit"."frequency", "public"."Habit"."targetDays", "public"."Habit"."currentStreak", "public"."Habit"."bestStreak", "public"."Habit"."createdAt", "public"."Habit"."updatedAt"
+
+ ❯ src/routes/checkins.integration.test.ts (12 tests | 3 failed) 1679ms
+   ❯ Check-in Management Integration Tests (12)
+     ❯ [checkin-001] Create Today's Check-in (5)
+       × Check-in includes habitId, date, notes 39ms
+     ❯ [checkin-002] Prevent Duplicate Check-in (4)
+       × [checkin-002] User can create check-in for different dates 55ms
+     ❯ Cancel Check-in (1)
+       × User can cancel their own check-in 36ms
+ ❯ src/routes/websocket.integration.test.ts (19 tests | 11 failed) 47193ms
+   ❯ WebSocket Integration Tests (19)
+     ❯ Connection Management (4)
+       × should handle disconnection 5083ms
+     ❯ Habit Events - Server to Client (5)
+       × should receive habit:created event 5066ms
+       × should receive habit:updated event 5039ms
+       × should receive habit:deleted event 5046ms
+       × should receive habit:checkedin event 5044ms
+       × should receive streak:updated event 5040ms
+     ❯ Real-time Synchronization (3)
+       × should broadcast habit creation to multiple clients 276ms
+       × should update habit state across tabs simultaneously 5044ms
+       × should sync check-in across sessions 299ms
+     ❯ Error Handling (2)
+       × should handle invalid event data 5039ms
+       × should handle connection timeout 5050ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 102 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/routes/checkin.api.integration.test.ts > Check-In API - Integration Tests > POST /api/habits/:id/checkin > should create a check-in for a habit
+Error: expected 201 "Created", got 401 "Unauthorized"
+ ❯ src/routes/checkin.api.integration.test.ts:39:10
+     37|           checkInDate: new Date().toISOString().split('T')[0],
+     38|         })
+     39|         .expect(201);
+       |          ^
+     40|
+     41|       expect(response.body).toHaveProperty('id');
+ ❯ Test._assertStatus ../../node_modules/supertest/lib/test.js:252:14
+ ❯ ../../node_modules/supertest/lib/test.js:308:13
+ ❯ Test._assertFunction ../../node_modules/supertest/lib/test.js:285:13
+ ❯ Test.assert ../../node_modules/supertest/lib/test.js:164:23
+ ❯ Server.localAssert ../../node_modules/supertest/lib/test.js:120:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/102]⎯
+
+ FAIL  src/routes/checkin.api.integration.test.ts > Check-In API - Integration Tests > POST /api/habits/:id/checkin > should prevent duplicate check-in on same day
+Error: expected 201 "Created", got 401 "Unauthorized"
+ ❯ src/routes/checkin.api.integration.test.ts:64:10
+     62|         .set('X-User-Id', userId)
+     63|         .send({ checkInDate: today })
+     64|         .expect(201);
+       |          ^
+     65|
+     66|       // Second check-in attempt
+ ❯ Test._assertStatus ../../node_modules/supertest/lib/test.js:252:14
+ ❯ ../../node_modules/supertest/lib/test.js:308:13
+ ❯ Test._assertFunction ../../node_modules/supertest/lib/test.js:285:13
+ ❯ Test.assert ../../node_modules/supertest/lib/test.js:164:23
+ ❯ Server.localAssert ../../node_modules/supertest/lib/test.js:120:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/102]⎯
+
+ FAIL  src/routes/checkin.api.integration.test.ts > Check-In API - Integration Tests > POST /api/habits/:id/checkin > should prevent check-in for paused habit
+Error: expected 400 "Bad Request", got 401 "Unauthorized"
+ ❯ src/routes/checkin.api.integration.test.ts:91:10
+     89|           checkInDate: new Date().toISOString().split('T')[0],
+     90|         })
+     91|         .expect(400);
+       |          ^
+     92|     });
+     93|
+ ❯ Test._assertStatus ../../node_modules/supertest/lib/test.js:252:14
+ ❯ ../../node_modules/supertest/lib/test.js:308:13
+ ❯ Test._assertFunction ../../node_modules/supertest/lib/test.js:285:13
+ ❯ Test.assert ../../node_modules/supertest/lib/test.js:164:23
+ ❯ Server.localAssert ../../node_modules/supertest/lib/test.js:120:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/102]⎯
+
+ FAIL  src/routes/checkin.api.integration.test.ts > Check-In API - Integration Tests > POST /api/habits/:id/checkin > should prevent check-in for archived habit
+Error: expected 400 "Bad Request", got 401 "Unauthorized"
+ ❯ src/routes/checkin.api.integration.test.ts:110:10
+    108|           checkInDate: new Date().toISOString().split('T')[0],
+    109|         })
+    110|         .expect(400);
+       |          ^
+    111|     });
+    112|
+ ❯ Test._assertStatus ../../node_modules/supertest/lib/test.js:252:14
+ ❯ ../../node_modules/supertest/lib/test.js:308:13
+ ❯ Test._assertFunction ../../node_modules/supertest/lib/test.js:285:13
+ ❯ Test.assert ../../node_modules/supertest/lib/test.js:164:23
+ ❯ Server.localAssert ../../node_modules/supertest/lib/test.js:120:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/102]⎯
+
+ FAIL  src/routes/checkin.api.integration.test.ts > Check-In API - Integration Tests > POST /api/habits/:id/checkin > should not allow check-in for future dates
+Error: expected 400 "Bad Request", got 401 "Unauthorized"
+ ❯ src/routes/checkin.api.integration.test.ts:124:10
+    122|           checkInDate: tomorrow.toISOString().split('T')[0],
+    123|         })
+    124|         .expect(400);

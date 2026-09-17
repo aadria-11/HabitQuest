@@ -18,11 +18,16 @@ export async function createCheckIn(
     const checkIn = await checkinService.createCheckIn(
       id,
       req.user.userId,
-      parsed.data.checkInDate,
-      parsed.data.comment ?? undefined,
+      parsed.data.date,
+      parsed.data.notes ?? undefined,
     );
 
-    res.status(201).json(checkIn);
+    res.status(201).json({
+      ...checkIn,
+      date: checkIn.checkInDate?.toISOString().split('T')[0],
+      notes: checkIn.comment,
+      habitId: id,
+    });
   } catch (error: any) {
     if (error.code === 'DUPLICATE_CHECKIN') {
       return res.status(409).json({ error: 'Already checked in today' });
@@ -49,7 +54,7 @@ export async function listCheckIns(
     const { id } = req.params;
 
     const checkIns = await checkinService.getCheckIns(id, req.user.userId);
-    res.json(checkIns);
+    res.json({ checkIns });
   } catch (error: any) {
     if (error.message === 'Habit not found') {
       return res.status(404).json({ error: 'Habit not found' });

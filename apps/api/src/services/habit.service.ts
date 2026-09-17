@@ -12,8 +12,10 @@ export async function createHabit(
       userId,
       name: data.name,
       description: data.description,
-      startDate: new Date(data.startDate),
+      startDate: new Date(),
       status: data.status || 'ACTIVE',
+      frequency: data.frequency || 'daily',
+      targetDays: data.targetDays,
     },
   });
 
@@ -74,6 +76,8 @@ export async function getHabits(
         description: true,
         startDate: true,
         status: true,
+        frequency: true,
+        targetDays: true,
         currentStreak: true,
         bestStreak: true,
         createdAt: true,

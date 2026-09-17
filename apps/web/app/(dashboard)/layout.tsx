@@ -3,6 +3,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { SocketProvider } from '@/components/providers/SocketProvider';
 import { auth } from '@/lib/auth';
 import { QueryProvider } from '@/components/providers/QueryProvider';
+import { redirect } from 'next/navigation';
 
 export default async function DashboardLayout({
   children,
@@ -10,6 +11,10 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+
+  if (!session) {
+    redirect('/login');
+  }
 
   return (
     <SessionProvider session={session}>

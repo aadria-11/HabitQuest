@@ -1,15 +1,15 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './e2e/tests',
+  testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [
-    ['html', { outputFolder: 'e2e/results' }],
-    ['json', { outputFile: 'e2e/results/results.json' }],
-    ['junit', { outputFile: 'e2e/results/junit.xml' }],
+    ['html', { outputFolder: 'results' }],
+    ['json', { outputFile: 'results/results.json' }],
+    ['junit', { outputFile: 'results/junit.xml' }],
     ['list'],
   ],
   use: {
@@ -35,7 +35,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run dev',
+    command: 'npm run dev -w apps/web',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
