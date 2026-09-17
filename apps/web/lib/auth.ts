@@ -7,11 +7,18 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 const INTERNAL_SECRET = process.env.INTERNAL_SECRET || '';
 const AUTH_SECRET = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || '';
 
+const googleClientId = process.env.GOOGLE_CLIENT_ID || '';
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
+
+if (googleClientId && !googleClientId.includes('apps.googleusercontent.com')) {
+  console.warn('Warning: GOOGLE_CLIENT_ID does not look like a valid Google OAuth ID');
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      clientId: googleClientId,
+      clientSecret: googleClientSecret,
       allowDangerousEmailAccountLinking: true,
     }),
     GitHub({
@@ -38,6 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async jwt({ token, user, account }) {
       if (account && user) {
+        console.log('[Auth JWT]', 'Provider:', account.provider, 'Email:', user.email);
         const syncResponse = await fetch(`${API_URL}/internal/users/sync`, {
           method: 'POST',
           headers: {
