@@ -201,3 +201,26 @@ export async function updateHabitStreaks(
     data: { currentStreak, bestStreak },
   });
 }
+
+export async function getUserHabits(
+  userId: string,
+  options?: {
+    search?: string;
+    status?: HabitStatus;
+    sortBy?: 'createdAt' | 'name';
+    sortDir?: 'asc' | 'desc';
+    skip?: number;
+    take?: number;
+  },
+): Promise<Habit[]> {
+  const result = await getHabits(userId, options || {});
+  return result.habits;
+}
+
+export async function getHabitById(habitId: string, userId: string): Promise<Habit | null> {
+  const habit = await prisma.habit.findFirst({
+    where: { id: habitId, userId },
+  });
+  if (!habit) return null;
+  return habit as Habit;
+}
