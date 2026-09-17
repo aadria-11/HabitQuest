@@ -1,16 +1,23 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
+import jwt from 'jsonwebtoken';
 import { createApp } from '@api/app';
 
 describe('Habit API - Integration Tests', () => {
   let app: any;
   let authToken: string;
   let habitId: string;
+  const AUTH_SECRET = process.env.AUTH_SECRET || 'test-secret-key-min-32-chars-long!';
 
   beforeEach(async () => {
     app = createApp();
-    // Mock authentication token
-    authToken = 'mock-auth-token-123';
+    const userId = 'test-user-' + Date.now();
+    // Generate real JWT token
+    authToken = jwt.sign(
+      { userId, email: 'test@example.com', name: 'Test User' },
+      AUTH_SECRET,
+      { expiresIn: '15m' }
+    );
   });
 
   describe('GET /api/habits', () => {
@@ -55,11 +62,11 @@ describe('Habit API - Integration Tests', () => {
       const response = await request(app)
         .get('/api/habits')
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', 'user-123')
         .expect(200);
 
       response.body.habits.forEach((habit: any) => {
-        expect(habit.userId).toBe('user-123');
+        const decoded: any = jwt.decode(authToken);
+        expect(habit.userId).toBe(decoded.userId);
       });
     });
   });

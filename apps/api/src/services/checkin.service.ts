@@ -147,3 +147,32 @@ export async function cancelCheckIn(habitId: string, userId: string, checkInId: 
     });
   }
 }
+
+export async function getCheckInHistory(habitId: string, userId: string) {
+  const habit = await prisma.habit.findFirst({
+    where: { id: habitId, userId },
+  });
+
+  if (!habit) {
+    throw new Error('Unauthorized');
+  }
+
+  return getCheckIns(habitId, userId);
+}
+
+export async function getCheckInsByDate(habitId: string, userId: string, date: string) {
+  const habit = await prisma.habit.findFirst({
+    where: { id: habitId, userId },
+  });
+
+  if (!habit) {
+    throw new Error('Unauthorized');
+  }
+
+  const checkInDate = new Date(date);
+
+  return prisma.habitCheckIn.findMany({
+    where: { habitId, checkInDate },
+    orderBy: { createdAt: 'desc' },
+  });
+}

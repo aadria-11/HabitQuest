@@ -68,3 +68,38 @@ export async function getHabitCheckIns(habitId: string): Promise<Date[]> {
 
   return checkIns.map((ci) => new Date(ci.checkInDate));
 }
+
+export async function calculateCurrentStreak(habitId: string): Promise<number> {
+  const dates = await getHabitCheckIns(habitId);
+  const { currentStreak } = calculateStreaks(dates);
+  return currentStreak;
+}
+
+export async function calculateBestStreak(habitId: string): Promise<number> {
+  const dates = await getHabitCheckIns(habitId);
+  const { bestStreak } = calculateStreaks(dates);
+  return bestStreak;
+}
+
+export async function canCheckInToday(habitId: string): Promise<boolean> {
+  const dates = await getHabitCheckIns(habitId);
+  if (dates.length === 0) return true;
+
+  const today = new Date();
+  const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+
+  const latestCheckIn = new Date(Math.max(...dates.map((d) => d.getTime())));
+  const latestCheckInUTC = new Date(Date.UTC(latestCheckIn.getUTCFullYear(), latestCheckIn.getUTCMonth(), latestCheckIn.getUTCDate()));
+
+  return todayUTC.getTime() !== latestCheckInUTC.getTime();
+}
+
+export async function updateStreaks(habitId: string): Promise<void> {
+  const dates = await getHabitCheckIns(habitId);
+  const { currentStreak, bestStreak } = calculateStreaks(dates);
+
+  await prisma.habit.update({
+    where: { id: habitId },
+    data: { currentStreak, bestStreak },
+  });
+}

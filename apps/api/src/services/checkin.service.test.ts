@@ -12,10 +12,27 @@ vi.mock('@api/lib/prisma', () => ({
       create: vi.fn(),
       findMany: vi.fn(),
       findUnique: vi.fn(),
+      findFirst: vi.fn(),
+      delete: vi.fn(),
     },
     habit: {
       findUnique: vi.fn(),
+      findFirst: vi.fn(),
+      update: vi.fn(),
     },
+    $transaction: vi.fn(async (callback: any) => {
+      return callback({
+        habitCheckIn: {
+          create: vi.fn(),
+          findMany: vi.fn(),
+          findFirst: vi.fn(),
+          delete: vi.fn(),
+        },
+        habit: {
+          update: vi.fn(),
+        },
+      });
+    }),
   },
 }));
 

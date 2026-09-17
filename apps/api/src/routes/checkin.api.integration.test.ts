@@ -1,22 +1,29 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
+import jwt from 'jsonwebtoken';
 import { createApp } from '@api/app';
 
 describe('Check-In API - Integration Tests', () => {
   let app: any;
   let authToken: string;
   let habitId: string;
-  let userId: string = 'user-123';
+  let userId: string;
+  const AUTH_SECRET = process.env.AUTH_SECRET || 'test-secret-key-min-32-chars-long!';
 
   beforeEach(async () => {
     app = createApp();
-    authToken = 'mock-auth-token-123';
+    userId = 'user-' + Date.now();
+    // Generate real JWT token
+    authToken = jwt.sign(
+      { userId, email: 'test@example.com', name: 'Test User' },
+      AUTH_SECRET,
+      { expiresIn: '15m' }
+    );
 
     // Create a test habit
     const habitResponse = await request(app)
       .post('/api/habits')
       .set('Authorization', `Bearer ${authToken}`)
-      .set('X-User-Id', userId)
       .send({
         name: 'Test Habit',
         description: 'Test habit for check-ins',
@@ -32,8 +39,7 @@ describe('Check-In API - Integration Tests', () => {
       const response = await request(app)
         .post(`/api/habits/${habitId}/checkin`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({
+          .send({
           checkInDate: new Date().toISOString().split('T')[0],
         })
         .expect(201);
@@ -59,16 +65,14 @@ describe('Check-In API - Integration Tests', () => {
       await request(app)
         .post(`/api/habits/${habitId}/checkin`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({ checkInDate: today })
+          .send({ checkInDate: today })
         .expect(201);
 
       // Second check-in attempt
       await request(app)
         .post(`/api/habits/${habitId}/checkin`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({ checkInDate: today })
+          .send({ checkInDate: today })
         .expect(409);
     });
 
@@ -77,15 +81,13 @@ describe('Check-In API - Integration Tests', () => {
       await request(app)
         .put(`/api/habits/${habitId}`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({ status: 'paused' });
+          .send({ status: 'paused' });
 
       // Try to check in
       await request(app)
         .post(`/api/habits/${habitId}/checkin`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({
+          .send({
           checkInDate: new Date().toISOString().split('T')[0],
         })
         .expect(400);
@@ -96,15 +98,13 @@ describe('Check-In API - Integration Tests', () => {
       await request(app)
         .put(`/api/habits/${habitId}`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({ status: 'archived' });
+          .send({ status: 'archived' });
 
       // Try to check in
       await request(app)
         .post(`/api/habits/${habitId}/checkin`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({
+          .send({
           checkInDate: new Date().toISOString().split('T')[0],
         })
         .expect(400);
@@ -117,8 +117,7 @@ describe('Check-In API - Integration Tests', () => {
       await request(app)
         .post(`/api/habits/${habitId}/checkin`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({
+          .send({
           checkInDate: tomorrow.toISOString().split('T')[0],
         })
         .expect(400);
@@ -139,8 +138,7 @@ describe('Check-In API - Integration Tests', () => {
       await request(app)
         .post(`/api/habits/${habitId}/checkin`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({
+          .send({
           checkInDate: new Date().toISOString().split('T')[0],
         })
         .expect(201);
@@ -161,16 +159,14 @@ describe('Check-In API - Integration Tests', () => {
       await request(app)
         .post(`/api/habits/${habitId}/checkin`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({
+          .send({
           checkInDate: new Date().toISOString().split('T')[0],
         });
 
       const response = await request(app)
         .get(`/api/habits/${habitId}/checkins`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .expect(200);
+          .expect(200);
 
       expect(Array.isArray(response.body.checkins)).toBe(true);
       expect(response.body.checkins.length).toBeGreaterThan(0);
@@ -180,8 +176,7 @@ describe('Check-In API - Integration Tests', () => {
       const response = await request(app)
         .get(`/api/habits/${habitId}/checkins`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .expect(200);
+          .expect(200);
 
       expect(response.body.checkins).toEqual([]);
     });
@@ -212,15 +207,13 @@ describe('Check-In API - Integration Tests', () => {
         await request(app)
           .post(`/api/habits/${habitId}/checkin`)
           .set('Authorization', `Bearer ${authToken}`)
-          .set('X-User-Id', userId)
-          .send({ checkInDate: date });
+              .send({ checkInDate: date });
       }
 
       const response = await request(app)
         .get(`/api/habits/${habitId}/checkins`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .expect(200);
+          .expect(200);
 
       expect(response.body.checkins[0].checkInDate).toBeGreaterThan(
         response.body.checkins[response.body.checkins.length - 1].checkInDate
@@ -240,8 +233,7 @@ describe('Check-In API - Integration Tests', () => {
         await request(app)
           .post(`/api/habits/${habitId}/checkin`)
           .set('Authorization', `Bearer ${authToken}`)
-          .set('X-User-Id', userId)
-          .send({ checkInDate: dateStr });
+              .send({ checkInDate: dateStr });
       }
 
       const response = await request(app)
@@ -264,8 +256,7 @@ describe('Check-In API - Integration Tests', () => {
         await request(app)
           .post(`/api/habits/${habitId}/checkin`)
           .set('Authorization', `Bearer ${authToken}`)
-          .set('X-User-Id', userId)
-          .send({ checkInDate: dateStr });
+              .send({ checkInDate: dateStr });
       }
 
       // Skip day 3
@@ -278,8 +269,7 @@ describe('Check-In API - Integration Tests', () => {
       await request(app)
         .post(`/api/habits/${habitId}/checkin`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({ checkInDate: day4Str });
+          .send({ checkInDate: day4Str });
 
       const response = await request(app)
         .get(`/api/habits/${habitId}`)
@@ -296,8 +286,7 @@ describe('Check-In API - Integration Tests', () => {
       await request(app)
         .post(`/api/habits/${habitId}/checkin`)
         .set('Authorization', `Bearer ${authToken}`)
-        .set('X-User-Id', userId)
-        .send({
+          .send({
           checkInDate: new Date().toISOString().split('T')[0],
         });
 

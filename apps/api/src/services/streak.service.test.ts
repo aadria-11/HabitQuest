@@ -11,7 +11,18 @@ vi.mock('@api/lib/prisma', () => ({
   prisma: {
     habitCheckIn: {
       findMany: vi.fn(),
+      findFirst: vi.fn(),
+      findUnique: vi.fn(),
       create: vi.fn(),
+      delete: vi.fn(),
+    },
+    habit: {
+      findMany: vi.fn(),
+      findFirst: vi.fn(),
+      findUnique: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
     },
   },
 }));
@@ -24,9 +35,10 @@ describe('Streak Service - Unit Tests', () => {
   describe('calculateCurrentStreak', () => {
     it('should calculate current streak from check-in history', async () => {
       const habitId = 'habit-1';
-      const today = new Date('2026-01-15');
-      const yesterday = new Date('2026-01-14');
-      const twoDaysAgo = new Date('2026-01-13');
+      const now = new Date();
+      const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      const yesterday = new Date(today.getTime() - 86400000);
+      const twoDaysAgo = new Date(today.getTime() - 172800000);
 
       const mockCheckIns = [
         { id: '1', habitId, checkInDate: today, createdAt: new Date() },
@@ -45,9 +57,10 @@ describe('Streak Service - Unit Tests', () => {
 
     it('should break streak if a day is missed', async () => {
       const habitId = 'habit-1';
-      const today = new Date('2026-01-15');
-      const yesterday = new Date('2026-01-14');
-      const threeDaysAgo = new Date('2026-01-12');
+      const now = new Date();
+      const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      const yesterday = new Date(today.getTime() - 86400000);
+      const threeDaysAgo = new Date(today.getTime() - 259200000);
 
       const mockCheckIns = [
         { id: '1', habitId, checkInDate: today, createdAt: new Date() },
@@ -239,8 +252,8 @@ describe('Streak Service - Unit Tests', () => {
 
     it('should prevent duplicate check-in on same day', async () => {
       const habitId = 'habit-1';
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const now = new Date();
+      const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
       vi.mocked(prisma.habitCheckIn.findMany).mockResolvedValue([
         { id: '1', habitId, checkInDate: today, createdAt: new Date() },
