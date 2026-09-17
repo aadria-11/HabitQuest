@@ -11,6 +11,53 @@ declare global {
   }
 }
 
+interface SessionUser {
+  id: string;
+  email: string;
+  name?: string;
+  image?: string;
+  provider?: string;
+}
+
+interface Session {
+  user?: SessionUser;
+  expires?: string;
+  accessToken?: string;
+  [key: string]: any;
+}
+
+export async function verifyAuthSession(session: Session): Promise<Session> {
+  if (!session) {
+    throw new Error('Invalid session');
+  }
+
+  if (!session.user || !session.user.id) {
+    throw new Error('Invalid session');
+  }
+
+  if (session.expires) {
+    const expiresAt = new Date(session.expires).getTime();
+    if (expiresAt < Date.now()) {
+      throw new Error('Session expired');
+    }
+  }
+
+  if (session.user.provider === 'credentials') {
+    throw new Error('Only SSO authentication is supported');
+  }
+
+  // Return a sanitized session without sensitive tokens
+  const { accessToken, ...sanitized } = session;
+  return sanitized;
+}
+
+export async function protectedRoute(req: any): Promise<boolean> {
+  if (!req.session || !req.session.user || !req.session.user.id) {
+    throw new Error('Unauthorized');
+  }
+  return true;
+}
+
 export function authMiddleware(
   req: Request & AuthenticatedRequest,
   res: Response,
