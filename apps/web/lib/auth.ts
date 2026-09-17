@@ -36,13 +36,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 
   callbacks: {
-    async authorized({ request, auth }) {
-      // Allow unauthenticated access to login page
-      if (request.nextUrl.pathname === '/login') {
-        return true;
-      }
-      return !!auth;
-    },
     async jwt({ token, user, account }) {
       if (account && user) {
         console.log('[Auth JWT]', 'Provider:', account.provider, 'Email:', user.email);

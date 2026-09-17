@@ -8,6 +8,6 @@ export const middleware = auth(async (req) => {
 
 export const config = {
   matcher: [
-    '/((?!login|auth|_next/static|_next/image|favicon.ico|public).*)',
+    '/((?!login|api/auth|_next/static|_next/image|favicon.ico|public).*)',
   ],
 };
