@@ -71,6 +71,10 @@ export async function apiRequest<T>(
     ...fetchOptions.headers,
   };
 
+  if (!session?.apiToken && endpoint.startsWith('/api/')) {
+    console.warn('No apiToken found for API request', { endpoint, sessionExists: !!session });
+  }
+
   const response = await fetch(url, {
     ...fetchOptions,
     headers,

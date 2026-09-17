@@ -12,10 +12,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      allowDangerousEmailAccountLinking: true,
     }),
     GitHub({
       clientId: process.env.GITHUB_CLIENT_ID || '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
 
@@ -23,9 +25,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   pages: {
     signIn: '/login',
+    error: '/login',
   },
 
   callbacks: {
+    async authorized({ request, auth }) {
+      // Allow unauthenticated access to login page
+      if (request.nextUrl.pathname === '/login') {
+        return true;
+      }
+      return !!auth;
+    },
     async jwt({ token, user, account }) {
       if (account && user) {
         const syncResponse = await fetch(`${API_URL}/internal/users/sync`, {
@@ -45,10 +55,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 
         if (!syncResponse.ok) {
-          throw new Error('Failed to sync user');
+          const errorData = await syncResponse.text();
+          console.error('Sync user failed:', { status: syncResponse.status, error: errorData, provider: account.provider });
+          throw new Error(`Failed to sync user: ${syncResponse.status}`);
         }
 
-        const { userId } = await syncResponse.json();
+        const syncData = await syncResponse.json();
+        const { userId } = syncData;
 
         token.userId = userId;
         token.email = user.email;
@@ -77,6 +90,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.userId;
         session.apiToken = token.apiToken as string;
+        console.log('Session callback - apiToken set:', !!session.apiToken, 'userId:', session.user.id);
       }
       return session;
     },

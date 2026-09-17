@@ -26,7 +26,7 @@ export async function listHabits(
     });
 
     res.json({
-      habits,
+      data: habits,
       total,
       page,
       pageSize,
