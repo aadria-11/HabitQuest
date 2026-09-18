@@ -14,33 +14,39 @@ if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'test';
 }
 
-// Mock the prisma client with all necessary methods
-vi.mock('./lib/prisma', () => {
-  const createMockModel = () => ({
-    findMany: vi.fn(),
-    findFirst: vi.fn(),
-    findUnique: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    updateMany: vi.fn(),
-    delete: vi.fn(),
-    deleteMany: vi.fn(),
-    count: vi.fn().mockResolvedValue(0),
-    aggregate: vi.fn(),
-  });
+// Create reusable mock model factory
+const createMockModel = () => ({
+  create: vi.fn(),
+  findMany: vi.fn(),
+  findFirst: vi.fn(),
+  findUnique: vi.fn(),
+  update: vi.fn(),
+  updateMany: vi.fn(),
+  delete: vi.fn(),
+  deleteMany: vi.fn(),
+  count: vi.fn(),
+  aggregate: vi.fn(),
+  upsert: vi.fn(),
+});
 
-  const mockPrisma = {
+// Mock Prisma with per-test configuration support
+vi.mock('./lib/prisma', () => ({
+  prisma: {
     habit: createMockModel(),
     habitCheckIn: createMockModel(),
     user: createMockModel(),
     $transaction: vi.fn(async (callback: any) => {
-      if (Array.isArray(callback)) {
-        return Promise.all(callback);
-      }
-      return callback(mockPrisma);
+      if (Array.isArray(callback)) return Promise.all(callback);
+      return callback({
+        habit: createMockModel(),
+        habitCheckIn: createMockModel()
+      });
     }),
     $disconnect: vi.fn(),
-  };
+  },
+}));
 
-  return { prisma: mockPrisma };
-});
+// Mock Socket.IO globally to prevent connection issues in tests
+vi.mock('../sockets/index.js', () => ({
+  getSocketIO: vi.fn(() => null),
+}));

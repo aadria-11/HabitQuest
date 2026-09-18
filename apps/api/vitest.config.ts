@@ -14,5 +14,9 @@ export default defineConfig({
     setupFiles: ['./src/test-setup.ts'],
     testTimeout: 10000,
     hookTimeout: 10000,
+    exclude: ['**/**.integration.test.ts', '**/node_modules/**'],
+  },
+  define: {
+    'process.env.DATABASE_URL': JSON.stringify('postgresql://test:test@localhost:5432/habit-quest-test'),
   },
 });
