@@ -47,7 +47,7 @@ Database
 Authentication
 --------------
 - Auth.js
-- Google OIDC
+- Google OAuth
 - GitHub OAuth
 
 Testing

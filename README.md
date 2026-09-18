@@ -4,7 +4,7 @@ A multi-user web application for tracking daily habits with real-time synchroniz
 
 ## Features
 
-- **SSO Authentication** — Google OIDC and GitHub sign-in via Auth.js
+- **SSO Authentication** — Google and GitHub sign-in via Auth.js
 - **Habit Management** — Create, edit, delete, and manage personal habits
 - **Daily Check-Ins** — Log daily habit completion with streak tracking
 - **Streak Calculation** — Current and best streak metrics
