@@ -8,7 +8,7 @@ export function useCheckIn() {
 
   return useMutation({
     mutationFn: ({ habitId, checkInDate, comment }: { habitId: string; checkInDate: string; comment?: string }) =>
-      api.post(`/api/habits/${habitId}/checkin`, { checkInDate, comment }),
+      api.post(`/api/habits/${habitId}/checkin`, { date: checkInDate, notes: comment }),
     onSuccess: (_, { habitId }) => {
       queryClient.invalidateQueries({ queryKey: ['checkins', habitId] });
       queryClient.invalidateQueries({ queryKey: ['habit', habitId] });

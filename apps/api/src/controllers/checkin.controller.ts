@@ -54,7 +54,7 @@ export async function listCheckIns(
     const { id } = req.params;
 
     const checkIns = await checkinService.getCheckIns(id, req.user.userId);
-    res.json({ checkIns });
+    res.json(checkIns);
   } catch (error: any) {
     if (error.message === 'Habit not found') {
       return res.status(404).json({ error: 'Habit not found' });

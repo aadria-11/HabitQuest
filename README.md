@@ -58,7 +58,7 @@ habit-quest/
 ### Prerequisites
 
 - Node.js ≥ 20
-- Docker (for local PostgreSQL)
+- PostgreSQL (local or remote instance)
 - Google OAuth credentials (OIDC)
 - GitHub OAuth credentials
 
@@ -73,43 +73,43 @@ habit-quest/
    ```bash
    cp .env.example .env
    # Edit .env with your values:
-   # - DATABASE_URL (PostgreSQL connection)
+   # - DATABASE_URL (PostgreSQL connection string)
    # - AUTH_SECRET (min 32 chars, random)
    # - GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (from Google Cloud Console)
    # - GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET (from GitHub Settings)
    # - INTERNAL_SECRET (min 32 chars, random)
    ```
 
-3. **Start PostgreSQL:**
-   ```bash
-   docker-compose up -d
-   ```
+3. **Ensure PostgreSQL is running:**
+   - Local instance: Make sure your PostgreSQL server is accessible at the URL in `DATABASE_URL`
+   - Remote instance: Verify network connectivity to your PostgreSQL server
 
 4. **Migrate database:**
    ```bash
    npm run db:push
    ```
 
-5. **Run dev servers (both frontend and backend):**
+5. **Run dev servers (frontend and backend together):**
    ```bash
    npm run dev
    ```
 
+   Both servers run concurrently in separate processes:
    - **Frontend:** http://localhost:3000 (Next.js, App Router)
    - **Backend:** http://localhost:3001 (Express API)
    
-   Both servers run concurrently in development mode with automatic reload on file changes.
+   Both have automatic reload on file changes. Output from each server is prefixed with `[0]` (API) and `[1]` (Web).
 
-### Running Backend and Frontend Separately
+### Running Frontend and Backend Separately
 
-If you need to run them individually:
+If you need to run them individually (e.g., for debugging):
 
 ```bash
 # Terminal 1: Backend only
-npm run dev -w apps/api
+npm run dev:api
 
 # Terminal 2: Frontend only  
-npm run dev -w apps/web
+npm run dev:web
 ```
 
 The frontend requires the backend to be running at `http://localhost:3001` for API calls.
@@ -375,16 +375,24 @@ npm run test:e2e -- --headed
    npm run build
    ```
 
-2. **Docker images** — Dockerfiles and compose file are placeholders; customize for production
-
-3. **Environment:**
+2. **Environment:**
    - Set production database URL, secrets, and CORS origin in env vars
    - Use strong AUTH_SECRET and INTERNAL_SECRET (min 32 chars)
+   - Update CORS_ORIGIN and API URLs for your domain
 
-4. **Database:** Run migrations:
+3. **Database:** 
+   - Ensure PostgreSQL is running and accessible
+   - Run migrations:
+     ```bash
+     npm run db:migrate
+     ```
+
+4. **Start servers:**
    ```bash
-   npm run db:migrate
+   npm run start
    ```
+   
+   Both backend and frontend will start on their configured ports.
 
 ## Streak Calculation & Timezone Handling
 

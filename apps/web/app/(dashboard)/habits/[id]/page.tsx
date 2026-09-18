@@ -21,9 +21,10 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
   const { data: checkIns, isLoading: checkInsLoading } = useCheckIns(id);
   const [showCommentDialog, setShowCommentDialog] = useState(false);
   const [comment, setComment] = useState('');
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
 
   const today = new Date().toISOString().split('T')[0];
-  const alreadyCheckedInToday = checkIns?.some(
+  const alreadyCheckedInToday = Array.isArray(checkIns) && checkIns.some(
     (ci) => new Date(ci.checkInDate).toISOString().split('T')[0] === today
   );
 
@@ -50,6 +51,7 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
   useEffect(() => {
     if (checkIn.isError && showCommentDialog) {
       setShowCommentDialog(false);
+      setShowErrorDialog(true);
     }
   }, [checkIn.isError, showCommentDialog]);
 
@@ -203,13 +205,22 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
         </div>
       )}
 
-      {checkIn.isError && (
+      {showErrorDialog && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75">
           <div className="w-full max-w-md rounded-xl bg-gradient-to-b from-amber-900 to-amber-950 p-6 shadow-2xl border-2 border-amber-700">
             <h2 className="mb-4 text-lg font-bold text-amber-300">⚠️ Quest Warning</h2>
-            <p className="mb-6 text-amber-100">{checkIn.error?.message ?? 'Already completed today'}</p>
+            <p className="mb-6 text-amber-100">
+              {checkIn.error instanceof Error
+                ? checkIn.error.message
+                : typeof checkIn.error === 'object' && checkIn.error && 'error' in checkIn.error
+                  ? (checkIn.error as any).error
+                  : 'Failed to complete quest'}
+            </p>
             <button
-              onClick={() => checkIn.reset()}
+              onClick={() => {
+                setShowErrorDialog(false);
+                checkIn.reset();
+              }}
               className="w-full rounded-lg bg-amber-700 hover:bg-amber-600 px-4 py-2 text-sm font-bold text-amber-50 border border-amber-600 transition-all"
             >
               Understood
@@ -222,7 +233,13 @@ export default function HabitDetailsPage({ params }: { params: Promise<{ id: str
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75">
           <div className="w-full max-w-md rounded-xl bg-gradient-to-b from-red-900 to-red-950 p-6 shadow-2xl border-2 border-red-700">
             <h2 className="mb-4 text-lg font-bold text-red-300">🔥 Error in Battle</h2>
-            <p className="mb-6 text-red-100">{cancelCheckIn.error?.message ?? 'Failed to cancel victory'}</p>
+            <p className="mb-6 text-red-100">
+              {cancelCheckIn.error instanceof Error
+                ? cancelCheckIn.error.message
+                : typeof cancelCheckIn.error === 'object' && cancelCheckIn.error && 'error' in cancelCheckIn.error
+                  ? (cancelCheckIn.error as any).error
+                  : 'Failed to cancel victory'}
+            </p>
             <button
               onClick={() => cancelCheckIn.reset()}
               className="w-full rounded-lg bg-red-700 hover:bg-red-600 px-4 py-2 text-sm font-bold text-red-50 border border-red-600 transition-all"
