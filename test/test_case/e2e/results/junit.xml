@@ -1,0 +1,128 @@
+<testsuites id="" name="" tests="57" failures="0" skipped="0" errors="0" time="151.01191200000002">
+<testsuite name="auth.e2e.test.ts" timestamp="2026-09-18T11:27:29.526Z" hostname="chromium" tests="6" failures="0" skipped="0" time="47.814" errors="0">
+<testcase name="End-to-End: Authentication Flow › should redirect unauthenticated user to login page" classname="auth.e2e.test.ts" time="10.197">
+</testcase>
+<testcase name="End-to-End: Authentication Flow › should display login options with Google and GitHub" classname="auth.e2e.test.ts" time="6.635">
+</testcase>
+<testcase name="End-to-End: Authentication Flow › should navigate to login page when accessing protected route" classname="auth.e2e.test.ts" time="10.109">
+</testcase>
+<testcase name="End-to-End: Authentication Flow › should display sign in heading on login page" classname="auth.e2e.test.ts" time="6.877">
+</testcase>
+<testcase name="Session Management › should maintain login page accessibility" classname="auth.e2e.test.ts" time="7.582">
+</testcase>
+<testcase name="Session Management › should redirect dashboard access without session" classname="auth.e2e.test.ts" time="6.414">
+</testcase>
+</testsuite>
+<testsuite name="habits.e2e.test.ts" timestamp="2026-09-18T11:27:29.526Z" hostname="chromium" tests="13" failures="0" skipped="0" time="81.362" errors="0">
+<testcase name="End-to-End: Habit Management - Authentication Required › Protected Routes › should redirect unauthenticated users from /habits" classname="habits.e2e.test.ts" time="5.889">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Protected Routes › should redirect unauthenticated users from /habits/new" classname="habits.e2e.test.ts" time="5.641">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Protected Routes › should show login page with auth providers" classname="habits.e2e.test.ts" time="6.486">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Habit List Page Structure › should have proper page title" classname="habits.e2e.test.ts" time="5.706">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Habit List Page Structure › should load login page without errors" classname="habits.e2e.test.ts" time="6.164">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Authentication Flow Navigation › should maintain redirect loop protection" classname="habits.e2e.test.ts" time="9.151">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Authentication Flow Navigation › should allow navigation back from login" classname="habits.e2e.test.ts" time="6.583">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Security Headers › should serve login page with proper status" classname="habits.e2e.test.ts" time="6.519">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Security Headers › should serve protected route with 200 or redirect" classname="habits.e2e.test.ts" time="5.683">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Page Load Performance › should load login page within reasonable time" classname="habits.e2e.test.ts" time="5.618">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Page Load Performance › should handle rapid redirects" classname="habits.e2e.test.ts" time="6.291">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Login Page Elements › should display both auth provider buttons" classname="habits.e2e.test.ts" time="6.471">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Login Page Elements › should have accessible login heading" classname="habits.e2e.test.ts" time="5.16">
+</testcase>
+</testsuite>
+<testsuite name="auth.e2e.test.ts" timestamp="2026-09-18T11:27:29.526Z" hostname="firefox" tests="6" failures="0" skipped="0" time="117.751" errors="0">
+<testcase name="End-to-End: Authentication Flow › should redirect unauthenticated user to login page" classname="auth.e2e.test.ts" time="13.35">
+</testcase>
+<testcase name="End-to-End: Authentication Flow › should display login options with Google and GitHub" classname="auth.e2e.test.ts" time="22.817">
+</testcase>
+<testcase name="End-to-End: Authentication Flow › should navigate to login page when accessing protected route" classname="auth.e2e.test.ts" time="26.624">
+</testcase>
+<testcase name="End-to-End: Authentication Flow › should display sign in heading on login page" classname="auth.e2e.test.ts" time="35.777">
+</testcase>
+<testcase name="Session Management › should maintain login page accessibility" classname="auth.e2e.test.ts" time="14.376">
+</testcase>
+<testcase name="Session Management › should redirect dashboard access without session" classname="auth.e2e.test.ts" time="4.807">
+</testcase>
+</testsuite>
+<testsuite name="habits.e2e.test.ts" timestamp="2026-09-18T11:27:29.526Z" hostname="firefox" tests="13" failures="0" skipped="0" time="87.668" errors="0">
+<testcase name="End-to-End: Habit Management - Authentication Required › Protected Routes › should redirect unauthenticated users from /habits" classname="habits.e2e.test.ts" time="5.04">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Protected Routes › should redirect unauthenticated users from /habits/new" classname="habits.e2e.test.ts" time="4.731">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Protected Routes › should show login page with auth providers" classname="habits.e2e.test.ts" time="6.117">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Habit List Page Structure › should have proper page title" classname="habits.e2e.test.ts" time="5.731">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Habit List Page Structure › should load login page without errors" classname="habits.e2e.test.ts" time="7.115">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Authentication Flow Navigation › should maintain redirect loop protection" classname="habits.e2e.test.ts" time="8.209">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Authentication Flow Navigation › should allow navigation back from login" classname="habits.e2e.test.ts" time="6.366">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Security Headers › should serve login page with proper status" classname="habits.e2e.test.ts" time="5.428">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Security Headers › should serve protected route with 200 or redirect" classname="habits.e2e.test.ts" time="7.899">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Page Load Performance › should load login page within reasonable time" classname="habits.e2e.test.ts" time="8.858">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Page Load Performance › should handle rapid redirects" classname="habits.e2e.test.ts" time="9.771">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Login Page Elements › should display both auth provider buttons" classname="habits.e2e.test.ts" time="6.189">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Login Page Elements › should have accessible login heading" classname="habits.e2e.test.ts" time="6.214">
+</testcase>
+</testsuite>
+<testsuite name="auth.e2e.test.ts" timestamp="2026-09-18T11:27:29.526Z" hostname="webkit" tests="6" failures="0" skipped="0" time="51.76" errors="0">
+<testcase name="End-to-End: Authentication Flow › should redirect unauthenticated user to login page" classname="auth.e2e.test.ts" time="10.958">
+</testcase>
+<testcase name="End-to-End: Authentication Flow › should display login options with Google and GitHub" classname="auth.e2e.test.ts" time="9.302">
+</testcase>
+<testcase name="End-to-End: Authentication Flow › should navigate to login page when accessing protected route" classname="auth.e2e.test.ts" time="10.107">
+</testcase>
+<testcase name="End-to-End: Authentication Flow › should display sign in heading on login page" classname="auth.e2e.test.ts" time="8.452">
+</testcase>
+<testcase name="Session Management › should maintain login page accessibility" classname="auth.e2e.test.ts" time="6.267">
+</testcase>
+<testcase name="Session Management › should redirect dashboard access without session" classname="auth.e2e.test.ts" time="6.674">
+</testcase>
+</testsuite>
+<testsuite name="habits.e2e.test.ts" timestamp="2026-09-18T11:27:29.526Z" hostname="webkit" tests="13" failures="0" skipped="0" time="102.335" errors="0">
+<testcase name="End-to-End: Habit Management - Authentication Required › Protected Routes › should redirect unauthenticated users from /habits" classname="habits.e2e.test.ts" time="9.005">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Protected Routes › should redirect unauthenticated users from /habits/new" classname="habits.e2e.test.ts" time="8.111">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Protected Routes › should show login page with auth providers" classname="habits.e2e.test.ts" time="6.602">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Habit List Page Structure › should have proper page title" classname="habits.e2e.test.ts" time="6.837">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Habit List Page Structure › should load login page without errors" classname="habits.e2e.test.ts" time="8.054">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Authentication Flow Navigation › should maintain redirect loop protection" classname="habits.e2e.test.ts" time="9.153">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Authentication Flow Navigation › should allow navigation back from login" classname="habits.e2e.test.ts" time="6.739">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Security Headers › should serve login page with proper status" classname="habits.e2e.test.ts" time="5.272">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Security Headers › should serve protected route with 200 or redirect" classname="habits.e2e.test.ts" time="8.57">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Page Load Performance › should load login page within reasonable time" classname="habits.e2e.test.ts" time="8.56">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Page Load Performance › should handle rapid redirects" classname="habits.e2e.test.ts" time="10.869">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Login Page Elements › should display both auth provider buttons" classname="habits.e2e.test.ts" time="9.654">
+</testcase>
+<testcase name="End-to-End: Habit Management - Authentication Required › Login Page Elements › should have accessible login heading" classname="habits.e2e.test.ts" time="4.909">
+</testcase>
+</testsuite>
+</testsuites>
