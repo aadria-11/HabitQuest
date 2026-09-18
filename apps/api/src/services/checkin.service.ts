@@ -1,6 +1,7 @@
 import { prisma } from '../lib/prisma.js';
 import { calculateStreaks } from './streak.service.js';
 import { getSocketIO } from '../sockets/index.js';
+import { evaluateMilestones } from './milestone.service.js';
 
 export async function createCheckIn(habitId: string, userId: string, checkInDate: string, comment?: string) {
   // Verify habit belongs to user
@@ -75,6 +76,9 @@ export async function createCheckIn(habitId: string, userId: string, checkInDate
       currentStreak: checkIn.currentStreak,
       bestStreak: checkIn.bestStreak,
     });
+
+    // Check for milestone achievements
+    await evaluateMilestones(userId, io);
   }
 
   return checkIn.checkIn;
